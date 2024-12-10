@@ -1,0 +1,31 @@
+version: "4"
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: rideon-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234qwer
+      POSTGRES_DB: rideon_db
+    ports:
+      - "5432:5432"
+
+  server:
+    container_name: rideon-django
+    image: rideon-django
+    build:
+      context: server
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+
+  client:
+    container_name: rideon-react
+    build:
+      context: client
+      dockerfile: Dockerfile
+    image: rideon-react
+    ports:
+      - "3000:3000"
