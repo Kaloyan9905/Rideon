@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'server.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "rideondb",
-        "USER": "mydatabaseuser",
-        "PASSWORD": "mypassword",
-        "HOST": "127.0.0.1",
+        "NAME": "rideon_db",
+        "USER": "postgres",
+        "PASSWORD": "1234qwer",
+        "HOST": "postgres",
         "PORT": "5432",
     }
 }
