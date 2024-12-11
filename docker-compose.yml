@@ -28,4 +28,4 @@ services:
       dockerfile: Dockerfile
     image: rideon-react
     ports:
-      - "3000:3000"
+      - "3000:80"
