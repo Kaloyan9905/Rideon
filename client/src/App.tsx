@@ -7,6 +7,7 @@ import {
 import LandingPage from "@/pages/LandingPage";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
+import ErrorPage from "./pages/ErrorPage";
 
 const App = createBrowserRouter(
   createRoutesFromElements(
@@ -14,6 +15,16 @@ const App = createBrowserRouter(
       <Route index path="/" element={<LandingPage />} />
       <Route path="/sign-up" element={<SignUpPage />} />
       <Route path="/sign-in" element={<SignInPage />} />
+      <Route
+        path="*"
+        element={
+          <ErrorPage
+            statusCode={404}
+            message="Page not found!"
+            authError={false}
+          />
+        }
+      />
     </>
   )
 );
