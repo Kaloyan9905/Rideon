@@ -1,4 +1,4 @@
-import daisyui from 'daisyui';
+import daisyui from "daisyui";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -7,12 +7,11 @@ export default {
     extend: {
       fontFamily: {
         montserrat: ["Montserrat", "sans-serif"],
-      }
+      },
     },
   },
   plugins: [daisyui],
   daisyui: {
-    themes: ['light', 'dark'],
+    themes: ["garden", "night"],
   },
-  darkMode: ['selector', '[data-theme="dark"]'],
 };

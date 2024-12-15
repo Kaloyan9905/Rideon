@@ -1,4 +1,5 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import ThemeSwitcher from "@/components/theme/ThemeSwitcher";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
@@ -7,8 +8,8 @@ import { z } from "zod";
 
 const registerSchema = z
   .object({
-    email: z.string().email("Invalid email address!").min(1, "*"),
-    password: z.string().min(8, "At 8 characters long!"),
+    email: z.string().min(1, "*").email("Invalid email address!"),
+    password: z.string().min(1, "*").min(8, "At 8 characters long!"),
     confirmPassword: z.string().min(1, "*"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -52,7 +53,7 @@ const SignUpPage = () => {
             <input
               type="email"
               {...register("email")}
-              className="w-full p-2 border border-blue-700 rounded-md focus:outline-none focus:border-blue-800 transition duration-200"
+              className="w-full p-2 border border-primary rounded-md focus:outline-none focus:border-gray-800 transition duration-200"
             />
           </div>
 
@@ -68,7 +69,7 @@ const SignUpPage = () => {
             <input
               type="password"
               {...register("password")}
-              className="w-full p-2 border border-blue-700 rounded-md focus:outline-none focus:border-blue-800 transition duration-200"
+              className="w-full p-2 border border-primary rounded-md focus:outline-none focus:border-gray-800 transition duration-200"
             />
           </div>
 
@@ -84,7 +85,7 @@ const SignUpPage = () => {
             <input
               type="password"
               {...register("confirmPassword")}
-              className="w-full p-2 border border-primary rounded-md focus:outline-none focus:border-blue-800 transition duration-200"
+              className="w-full p-2 border border-primary rounded-md focus:outline-none focus:border-gray-800 transition duration-200"
             />
           </div>
         </div>
@@ -109,6 +110,8 @@ const SignUpPage = () => {
           </Link>
         </div>
       </form>
+
+      <ThemeSwitcher absolute />
     </MaxWidthWrapper>
   );
 };
