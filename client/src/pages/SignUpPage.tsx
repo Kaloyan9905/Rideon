@@ -1,7 +1,8 @@
 import authService from "@/api/services/auth-service";
+import storageService from "@/api/services/storage-service";
+import { AuthResponseData } from "@/api/types/auth";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ThemeSwitcher from "@/components/theme/ThemeSwitcher";
-import { fields } from "@hookform/resolvers/ajv/src/__tests__/__fixtures__/data.js";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useForm } from "react-hook-form";
@@ -38,9 +39,38 @@ const SignUpPage = () => {
 
     await authService
       .makeSignUpRequest(data.email, data.password, data.confirmPassword)
-      .then(() => {
-        toast.success("Successfully signed up! 🎉");
-        navigate("/sign-in");
+      .then(async () => {
+        // Automatically sign in when user is created
+        await authService
+          .makeSignInRequest(data.email, data.password)
+          .then((response) => {
+            const responseData: AuthResponseData =
+              response.data as unknown as AuthResponseData;
+
+            storageService.saveAccessToken(responseData.access);
+            storageService.saveRefreshToken(responseData.refresh);
+            storageService.saveTokenExpiresDate(responseData.access);
+
+            navigate("/");
+          })
+          .catch((error) => {
+            if (axios.isAxiosError(error)) {
+              console.log("Axios error response: ", error.response?.data);
+
+              const errorData = error.response?.data;
+              if (errorData) {
+                const errorMessages = Object.entries(errorData)
+                  .map(
+                    ([fields, messages]) => `${fields}: ${(messages as string[]).join("\n")}`
+                  )
+                  .join("\n");
+
+                toast.error(errorMessages);
+              } else {
+                toast.error("An error occurred during sign up!");
+              }
+            }
+          });
       })
       .catch((error) => {
         if (axios.isAxiosError(error)) {
@@ -49,7 +79,7 @@ const SignUpPage = () => {
           const errorData = error.response?.data;
           if (errorData) {
             const errorMessages = Object.entries(errorData)
-              .map(([fields, messages]) => `${fields}: ${messages.join("\n")}`)
+              .map(([fields, messages]) => `${fields}: ${(messages as string[]).join("\n")}`)
               .join("\n");
 
             toast.error(errorMessages);

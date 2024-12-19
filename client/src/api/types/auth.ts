@@ -8,3 +8,12 @@ export interface SignUpRequest {
   password: string;
   password2: string;
 }
+
+export interface SignInRequest {
+  email: string;
+  password: string;
+}
+
+export interface RenewTokensRequest {
+  refresh: string;
+}
