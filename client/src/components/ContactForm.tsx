@@ -7,7 +7,7 @@ import MaxWidthWrapper from "./MaxWidthWrapper";
 const contactSchema = z.object({
   first_name: z.string().min(1, "*"),
   last_name: z.string().min(1, "*"),
-  email: z.string().email("Invalid email address!").min(1, "*"),
+  email: z.string().min(1, "*").email("Invalid email address!"),
   content: z.string().min(1, "*"),
 });
 

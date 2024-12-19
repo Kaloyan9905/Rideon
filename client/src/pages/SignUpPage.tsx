@@ -1,6 +1,9 @@
+import authService from "@/api/services/auth-service";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ThemeSwitcher from "@/components/theme/ThemeSwitcher";
+import { fields } from "@hookform/resolvers/ajv/src/__tests__/__fixtures__/data.js";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -30,9 +33,31 @@ const SignUpPage = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  function onSubmit(data: RegisterSchemaType) {
+  async function onSubmit(data: RegisterSchemaType) {
     console.log(data);
-    toast.success("Successfully signed up! 🎉");
+
+    await authService
+      .makeSignUpRequest(data.email, data.password, data.confirmPassword)
+      .then(() => {
+        toast.success("Successfully signed up! 🎉");
+        navigate("/sign-in");
+      })
+      .catch((error) => {
+        if (axios.isAxiosError(error)) {
+          console.log("Axios error response: ", error.response?.data);
+
+          const errorData = error.response?.data;
+          if (errorData) {
+            const errorMessages = Object.entries(errorData)
+              .map(([fields, messages]) => `${fields}: ${messages.join("\n")}`)
+              .join("\n");
+
+            toast.error(errorMessages);
+          } else {
+            toast.error("An error occurred during sign up!");
+          }
+        }
+      });
   }
 
   return (
