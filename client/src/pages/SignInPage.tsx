@@ -3,7 +3,9 @@ import storageService from "@/api/services/storage-service";
 import { AuthResponseData } from "@/api/types/auth";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ThemeSwitcher from "@/components/theme/ThemeSwitcher";
+import { QUERY_KEYS } from "@/shared/query-keys";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
@@ -19,6 +21,47 @@ type LoginSchemaType = z.infer<typeof loginSchema>;
 
 const SignInPage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  async function signIn(data: LoginSchemaType): Promise<AuthResponseData> {
+    const response = await authService.makeSignInRequest(
+      data.email,
+      data.password
+    );
+
+    return response.data as unknown as AuthResponseData;
+  }
+
+  const signInMutation = useMutation({
+    mutationFn: signIn,
+    mutationKey: QUERY_KEYS.auth,
+    onSuccess: (data) => {
+      storageService.saveAccessToken(data.access);
+      storageService.saveRefreshToken(data.refresh);
+      storageService.saveTokenExpiresDate(data.access);
+
+      toast.success("Sign in successful!");
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.auth,
+      });
+      navigate("/dashboard");
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        const errorData = error.response?.data;
+        const errorMessages = errorData
+          ? Object.entries(errorData)
+              .map(
+                ([fields, messages]) =>
+                  `${fields}: ${(messages as string[]).join("\n")}`
+              )
+              .join("\n")
+          : "An error occurred during sign up!";
+
+        toast.error(errorMessages);
+      }
+    },
+  });
 
   const {
     register,
@@ -29,37 +72,7 @@ const SignInPage = () => {
   });
 
   async function onSubmit(data: LoginSchemaType) {
-    await authService
-      .makeSignInRequest(data.email, data.password)
-      .then((response) => {
-        const responseData: AuthResponseData =
-          response.data as unknown as AuthResponseData;
-
-        storageService.saveAccessToken(responseData.access);
-        storageService.saveRefreshToken(responseData.refresh);
-        storageService.saveTokenExpiresDate(responseData.access);
-
-        navigate("/");
-      })
-      .catch((error) => {
-        if (axios.isAxiosError(error)) {
-          console.log("Axios error response: ", error.response?.data);
-
-          const errorData = error.response?.data;
-          if (errorData) {
-            const errorMessages = Object.entries(errorData)
-              .map(
-                ([fields, messages]) =>
-                  `${fields}: ${(messages as string[]).join("\n")}`
-              )
-              .join("\n");
-
-            toast.error(errorMessages);
-          } else {
-            toast.error("An error occurred during sign up!");
-          }
-        }
-      });
+    signInMutation.mutate(data);
   }
 
   return (

@@ -8,7 +8,6 @@ import LandingPage from "@/pages/LandingPage";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
 import ErrorPage from "./pages/ErrorPage";
-import AuthGuard from "./components/AuthGuard";
 import ProfilePage from "./pages/ProfilePage";
 import DashboardPage from "./pages/DashboardPage";
 
