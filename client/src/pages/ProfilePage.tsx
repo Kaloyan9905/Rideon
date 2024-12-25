@@ -3,6 +3,7 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ThemeSwitcher from "@/components/theme/ThemeSwitcher";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save, Trash2, Undo2 } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { z } from "zod";
@@ -23,6 +24,23 @@ type EditProfileSchemaType = z.infer<typeof editProfileSchema>;
 
 const ProfilePage = () => {
   const navigate = useNavigate();
+
+  const [selectedImage, setSelectedImage] = useState<Blob | undefined>(
+    undefined
+  );
+  const [previewImage, setPreviewImage] = useState<string | undefined>(
+    undefined
+  );
+
+  function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files && event.target.files[0];
+
+    if (file) {
+      setSelectedImage(file);
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewImage(imageUrl);
+    }
+  }
 
   const {
     register,
@@ -57,9 +75,23 @@ const ProfilePage = () => {
       <MaxWidthWrapper className="flex flex-col justify-center lg:gap-14 gap-7 items-center h-full p-7">
         <div className="flex flex-row gap-5 items-center opacity-80 shadow-lg p-4 rounded-lg">
           <div className="flex flex-row gap-5 items-center">
-            <img
-              src="https://www.shutterstock.com/image-illustration/leather-background-jpeg-version-260nw-101031550.jpg"
-              className="lg:w-20 lg:h-20 w-12 h-12 mask mask-squircle"
+            <label htmlFor="profile-picture-input">
+              <img
+                src={
+                  previewImage
+                    ? previewImage
+                    : "https://www.shutterstock.com/image-illustration/leather-background-jpeg-version-260nw-101031550.jpg"
+                }
+                alt="Profile Picture"
+                className="lg:w-20 lg:h-20 w-12 h-12 mask mask-squircle cursor-pointer hover:opacity-75 transition-all ease-in-out duration-300"
+              />
+            </label>
+            <input
+              id="profile-picture-input"
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handleImageChange}
             />
 
             <div className="flex flex-col">

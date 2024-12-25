@@ -11,6 +11,9 @@ import { ACCESS_TOKEN_CHECKING_INTERVAL } from "./shared/auth-constants.ts";
 import storageService from "./api/services/storage-service.ts";
 import authService from "./api/services/auth-service.ts";
 import { AuthResponseData } from "./api/types/auth.ts";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const checkTokens = async () => {
   if (!storageService.retrieveAccessToken()) {
@@ -44,18 +47,22 @@ const checkTokens = async () => {
   }
 };
 
-await checkTokens();
+(async () => {
+  await checkTokens();
+})();
 
 setInterval(checkTokens, ACCESS_TOKEN_CHECKING_INTERVAL);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
-      <ClientThemeWrapper>
-        <SharedLayout>
-          <RouterProvider router={App} />
-        </SharedLayout>
-      </ClientThemeWrapper>
+      <QueryClientProvider client={queryClient}>
+        <ClientThemeWrapper>
+          <SharedLayout>
+            <RouterProvider router={App} />
+          </SharedLayout>
+        </ClientThemeWrapper>
+      </QueryClientProvider>
     </ThemeProvider>
 
     <Toaster richColors />

@@ -3,8 +3,9 @@ import storageService from "@/api/services/storage-service";
 import { AuthResponseData } from "@/api/types/auth";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ThemeSwitcher from "@/components/theme/ThemeSwitcher";
+import { QUERY_KEYS } from "@/shared/query-keys";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
@@ -26,6 +27,7 @@ type RegisterSchemaType = z.infer<typeof registerSchema>;
 
 const SignUpPage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -35,63 +37,52 @@ const SignUpPage = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  async function onSubmit(data: RegisterSchemaType) {
-    console.log(data);
+  async function signUp(data: RegisterSchemaType): Promise<AuthResponseData> {
+    await authService.makeSignUpRequest(
+      data.email,
+      data.password,
+      data.confirmPassword
+    );
+    const response = await authService.makeSignInRequest(
+      data.email,
+      data.password
+    );
 
-    await authService
-      .makeSignUpRequest(data.email, data.password, data.confirmPassword)
-      .then(async () => {
-        await authService
-          .makeSignInRequest(data.email, data.password)
-          .then((response) => {
-            const responseData: AuthResponseData =
-              response.data as unknown as AuthResponseData;
+    return response.data as unknown as AuthResponseData;
+  }
 
-            storageService.saveAccessToken(responseData.access);
-            storageService.saveRefreshToken(responseData.refresh);
-            storageService.saveTokenExpiresDate(responseData.access);
+  const signUpMutation = useMutation({
+    mutationFn: signUp,
+    onSuccess: (data) => {
+      storageService.saveAccessToken(data.access);
+      storageService.saveRefreshToken(data.refresh);
+      storageService.saveTokenExpiresDate(data.access);
 
-            navigate("/");
-          })
-          .catch((error) => {
-            if (axios.isAxiosError(error)) {
-              console.log("Axios error response: ", error.response?.data);
-
-              const errorData = error.response?.data;
-              if (errorData) {
-                const errorMessages = Object.entries(errorData)
-                  .map(
-                    ([fields, messages]) =>
-                      `${fields}: ${(messages as string[]).join("\n")}`
-                  )
-                  .join("\n");
-
-                toast.error(errorMessages);
-              } else {
-                toast.error("An error occurred during sign up!");
-              }
-            }
-          });
-      })
-      .catch((error) => {
-        if (axios.isAxiosError(error)) {
-          console.log("Axios error response: ", error.response?.data);
-
-          const errorData = error.response?.data;
-          if (errorData) {
-            const errorMessages = Object.entries(errorData)
+      toast.success("Sign up successful!");
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.auth,
+      });
+      navigate("/dashboard");
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        const errorData = error.response?.data;
+        const errorMessages = errorData
+          ? Object.entries(errorData)
               .map(
                 ([fields, messages]) =>
                   `${fields}: ${(messages as string[]).join("\n")}`
               )
-              .join("\n");
+              .join("\n")
+          : "An error occurred during sign up!";
 
-            toast.error(errorMessages);
-          } else {
-            toast.error("An error occurred during sign up!");
-          }
-        }
-      });
+        toast.error(errorMessages);
+      }
+    },
+  });
+
+  function onSubmit(data: RegisterSchemaType) {
+    signUpMutation.mutate(data);
   }
 
   return (
@@ -151,7 +142,7 @@ const SignUpPage = () => {
 
         <div className="flex flex-row gap-3">
           <button type="submit" className="btn btn-primary flex-grow-[5]">
-            Submit
+            Sign Up
           </button>
           <button
             type="button"
