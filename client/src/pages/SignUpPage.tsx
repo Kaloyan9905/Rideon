@@ -4,6 +4,7 @@ import { AuthResponseData } from "@/api/types/auth";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ThemeSwitcher from "@/components/theme/ThemeSwitcher";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
@@ -40,7 +41,6 @@ const SignUpPage = () => {
     await authService
       .makeSignUpRequest(data.email, data.password, data.confirmPassword)
       .then(async () => {
-        // Automatically sign in when user is created
         await authService
           .makeSignInRequest(data.email, data.password)
           .then((response) => {
@@ -61,7 +61,8 @@ const SignUpPage = () => {
               if (errorData) {
                 const errorMessages = Object.entries(errorData)
                   .map(
-                    ([fields, messages]) => `${fields}: ${(messages as string[]).join("\n")}`
+                    ([fields, messages]) =>
+                      `${fields}: ${(messages as string[]).join("\n")}`
                   )
                   .join("\n");
 
@@ -79,7 +80,10 @@ const SignUpPage = () => {
           const errorData = error.response?.data;
           if (errorData) {
             const errorMessages = Object.entries(errorData)
-              .map(([fields, messages]) => `${fields}: ${(messages as string[]).join("\n")}`)
+              .map(
+                ([fields, messages]) =>
+                  `${fields}: ${(messages as string[]).join("\n")}`
+              )
               .join("\n");
 
             toast.error(errorMessages);
