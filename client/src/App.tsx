@@ -10,6 +10,7 @@ import SignInPage from "./pages/SignInPage";
 import ErrorPage from "./pages/ErrorPage";
 import AuthGuard from "./components/AuthGuard";
 import ProfilePage from "./pages/ProfilePage";
+import DashboardPage from "./pages/DashboardPage";
 
 const App = createBrowserRouter(
   createRoutesFromElements(
@@ -19,7 +20,13 @@ const App = createBrowserRouter(
       <Route path="/sign-in" element={<SignInPage />} />
       <Route
         path="/profile"
-        element={<AuthGuard element={<ProfilePage />} requireStaff={false} />}
+        // element={<AuthGuard element={<ProfilePage />} requireStaff={false} />}
+        element={<ProfilePage />}
+      />
+      <Route
+        path="/dashboard"
+        // element={<AuthGuard element={<ProfilePage />} requireStaff={false} />}
+        element={<DashboardPage />}
       />
       <Route
         path="*"
