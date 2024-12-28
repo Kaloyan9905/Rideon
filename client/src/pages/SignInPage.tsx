@@ -1,6 +1,7 @@
 import authService from "@/api/services/auth-service";
 import storageService from "@/api/services/storage-service";
 import { AuthResponseData } from "@/api/types/auth";
+import { LoadingSpinner } from "@/components/loading/LoadingSpinner";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ThemeSwitcher from "@/components/theme/ThemeSwitcher";
 import { QUERY_KEYS } from "@/shared/query-keys";
@@ -21,7 +22,6 @@ type LoginSchemaType = z.infer<typeof loginSchema>;
 
 const SignInPage = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   async function signIn(data: LoginSchemaType): Promise<AuthResponseData> {
     const response = await authService.makeSignInRequest(
@@ -34,31 +34,35 @@ const SignInPage = () => {
 
   const signInMutation = useMutation({
     mutationFn: signIn,
-    mutationKey: QUERY_KEYS.auth,
+    mutationKey: ["signIn"],
     onSuccess: (data) => {
       storageService.saveAccessToken(data.access);
       storageService.saveRefreshToken(data.refresh);
       storageService.saveTokenExpiresDate(data.access);
 
       toast.success("Sign in successful!");
-      queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.auth,
-      });
       navigate("/dashboard");
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
         const errorData = error.response?.data;
-        const errorMessages = errorData
-          ? Object.entries(errorData)
-              .map(
-                ([fields, messages]) =>
-                  `${fields}: ${(messages as string[]).join("\n")}`
-              )
-              .join("\n")
-          : "An error occurred during sign up!";
 
-        toast.error(errorMessages);
+        if (errorData?.detail) {
+          toast.error(errorData.detail);
+        } else if (typeof errorData === "object" && errorData !== null) {
+          const errorMessages = Object.entries(errorData)
+            .map(([field, messages]) => {
+              if (Array.isArray(messages)) {
+                return `${field}: ${messages.join(", ")}`;
+              }
+              return `${field}: ${messages}`;
+            })
+            .join("\n");
+
+          toast.error(errorMessages);
+        } else {
+          toast.error("An error occurred during sign in!");
+        }
       }
     },
   });
@@ -77,6 +81,8 @@ const SignInPage = () => {
 
   return (
     <MaxWidthWrapper className="flex flex-col justify-center items-center h-screen gap-7">
+      {signInMutation.isPending && <LoadingSpinner />}
+
       <h1 className="text-3xl font-montserrat font-medium">Login Page</h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -93,7 +99,7 @@ const SignInPage = () => {
             <input
               type="email"
               {...register("email")}
-              className="w-full p-2 border border-blue-700 rounded-md focus:outline-none focus:border-gray-800 transition duration-200"
+              className="w-full p-2 border border-primary rounded-md focus:outline-none focus:border-gray-800 transition duration-200"
             />
           </div>
 
@@ -109,14 +115,18 @@ const SignInPage = () => {
             <input
               type="password"
               {...register("password")}
-              className="w-full p-2 border border-blue-700 rounded-md focus:outline-none focus:border-gray-800 transition duration-200"
+              className="w-full p-2 border border-primary rounded-md focus:outline-none focus:border-gray-800 transition duration-200"
             />
           </div>
         </div>
 
         <div className="flex flex-row gap-3">
-          <button type="submit" className="btn btn-primary flex-grow-[5]">
-            Login
+          <button
+            type="submit"
+            className="btn btn-primary flex-grow-[5]"
+            disabled={signInMutation.isPending}
+          >
+            Sign In
           </button>
           <button
             type="button"

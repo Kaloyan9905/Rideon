@@ -37,7 +37,7 @@ const Navbar = () => {
 
   return (
     <div className="p-4 flex flex-row justify-between">
-      <div className="drawer">
+      <div className="drawer z-50">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
           <label htmlFor="my-drawer" className="btn btn-primary drawer-button">
@@ -79,7 +79,7 @@ const Navbar = () => {
                   <span className="text-accent">
                     <IdCard />
                   </span>{" "}
-                  Transport Card
+                  Tickets & Cards
                 </Link>
               </li>
               <li>
