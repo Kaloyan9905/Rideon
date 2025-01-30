@@ -25,7 +25,7 @@ type EditProfileSchemaType = z.infer<typeof editProfileSchema>;
 const ProfilePage = () => {
   const navigate = useNavigate();
 
-  const [selectedImage, setSelectedImage] = useState<Blob | undefined>(
+  const [, setSelectedImage] = useState<Blob | undefined>(
     undefined
   );
   const [previewImage, setPreviewImage] = useState<string | undefined>(
