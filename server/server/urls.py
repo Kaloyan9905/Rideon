@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('authenticate/', include('server.authentication.urls')),
     path('api/', include('server.accounts.urls')),
+    path('pass/', include('server.passes.urls')),
 ]
 
 if settings.DEBUG:  # Serve media files only in development mode

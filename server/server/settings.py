@@ -30,6 +30,7 @@ INSTALLED_APPS = [
 
     'server.authentication',
     'server.accounts',
+    'server.passes'
 
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
