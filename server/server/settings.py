@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -28,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
 
     'server.authentication',
+    'server.accounts',
 
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
@@ -125,6 +127,9 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:5173',
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
