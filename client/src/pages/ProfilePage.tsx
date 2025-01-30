@@ -25,7 +25,7 @@ type EditProfileSchemaType = z.infer<typeof editProfileSchema>;
 const ProfilePage = () => {
   const navigate = useNavigate();
 
-  const [selectedImage, setSelectedImage] = useState<Blob | undefined>(
+  const [, setSelectedImage] = useState<Blob | undefined>(
     undefined
   );
   const [previewImage, setPreviewImage] = useState<string | undefined>(
@@ -60,6 +60,8 @@ const ProfilePage = () => {
     console.log(data);
   }
 
+  // async function handleDeleteProfile() {}
+
   return (
     <div className="h-screen">
       <div className="absolute top-5 flex flex-row justify-between items-center w-full px-5 py-1">
@@ -74,7 +76,7 @@ const ProfilePage = () => {
       </div>
       <MaxWidthWrapper className="flex flex-col justify-center lg:gap-14 gap-7 items-center h-full p-7">
         <div className="flex flex-row gap-5 items-center opacity-80 shadow-lg p-4 rounded-lg">
-          <div className="flex flex-row gap-5 items-center">
+          <div className="flex md:flex-row flex-col gap-5 items-center">
             <label htmlFor="profile-picture-input">
               <img
                 src={
@@ -125,8 +127,9 @@ const ProfilePage = () => {
                 Are you sure that you want to delete?
               </p>
               <div className="modal-action">
-                <form method="dialog" className="w-full">
-                  <button className="btn btn-primary w-full">Close</button>
+                <form method="dialog" className="w-full flex flex-row gap-3">
+                  <button className="btn btn-error flex-[1.7]">Delete</button>
+                  <button className="btn btn-primary flex-[0.7]">Close</button>
                 </form>
               </div>
             </div>
