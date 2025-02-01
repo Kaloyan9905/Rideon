@@ -1,6 +1,6 @@
 import uuid
-from sqlite3 import IntegrityError
 
+from django.db import IntegrityError
 from django.utils import timezone
 
 from server.passes.models import Ticket
