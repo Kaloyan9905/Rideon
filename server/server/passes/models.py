@@ -1,3 +1,5 @@
+import uuid
+
 from django.utils import timezone
 from django.db import models
 
@@ -11,7 +13,12 @@ class Pass(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     expires_at = models.DateTimeField()
 
-    serial_number = models.CharField(max_length=SERIAL_NUMBER_MAX_LENGTH, unique=True)
+    serial_number = models.CharField(
+        max_length=SERIAL_NUMBER_MAX_LENGTH,
+        unique=True,
+        blank=True,
+        editable=False,
+    )
     owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     # qr_code = models.OneToOneField(QRCode, on_delete=models.CASCADE)
@@ -19,8 +26,18 @@ class Pass(models.Model):
     class Meta:
         abstract = True
 
+    @staticmethod
+    def generate_serial_number():
+        return str(uuid.uuid4())[:14]
+
     def is_expired(self):
         return self.expires_at < timezone.now()
+
+    def save(self, *args, **kwargs):
+        if not self.serial_number:
+            self.serial_number = self.generate_serial_number()
+
+        super().save(*args, **kwargs)
 
 
 class SingleUsePass(Pass):

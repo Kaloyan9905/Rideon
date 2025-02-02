@@ -12,4 +12,5 @@ class TicketSerializer(serializers.ModelSerializer):
 class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
-        fields = '__all__'
+        fields = ['owner', 'expires_at']
+        read_only_fields = ['owner']

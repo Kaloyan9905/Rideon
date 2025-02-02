@@ -1,4 +1,8 @@
+from datetime import timedelta
+
+from django.utils import timezone
 from rest_framework import generics, status
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -13,7 +17,39 @@ class CardCreateAPIView(generics.CreateAPIView):
     serializer_class = CardSerializer
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user.profile)
+        serializer.save(
+            owner=self.request.user.profile,
+            expires_at=timezone.now() + timedelta(days=30)
+        )
+
+
+class DetailsCardAPIView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Card.objects.all()
+    serializer_class = CardSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(owner=self.request.user.profile)
+
+
+class UpdateCardAPIView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Card.objects.all()
+    serializer_class = CardSerializer
+
+    def get_object(self):
+        obj = super().get_object()
+
+        if not obj.owner == self.request.user.profile:
+            raise PermissionDenied("You do not have permission to edit this card.")
+
+        return obj
+
+
+class DeleteCardAPIView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Card.objects.all()
+    serializer_class = CardSerializer
 
 
 class PurchaseTicketAPIView(generics.ListCreateAPIView):

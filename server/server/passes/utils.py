@@ -1,5 +1,3 @@
-import uuid
-
 from django.db import IntegrityError
 from django.utils import timezone
 
@@ -14,7 +12,6 @@ def create_ticket_for_user(profile, max_attempts=5):
         try:
             ticket = Ticket.objects.create(
                 expires_at=end_of_day,
-                serial_number=generate_serial_number(),
                 owner=profile,
             )
             return ticket
@@ -22,7 +19,3 @@ def create_ticket_for_user(profile, max_attempts=5):
         except IntegrityError:
             if attempt == max_attempts - 1:
                 raise ValueError('Failed to purchase ticket!')
-
-
-def generate_serial_number():
-    return str(uuid.uuid4())[:14]
