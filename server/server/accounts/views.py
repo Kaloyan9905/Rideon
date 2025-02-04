@@ -1,16 +1,17 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from server.accounts.models import UserProfile
 from server.accounts.serializers import UserProfileSerializer
 
 
-class UserProfileViewSet(ModelViewSet):
-    queryset = UserProfile.objects.all()
+class UserProfileView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return UserProfile.objects.filter(user=self.request.user)
+    def get_object(self):
+        return UserProfile.objects.get(user=self.request.user)
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    def perform_destroy(self, instance):
+        user = instance.user
+        instance.delete()
+        user.delete()
