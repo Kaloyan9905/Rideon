@@ -9,15 +9,22 @@ import { useNavigate } from "react-router";
 import { z } from "zod";
 
 const editProfileSchema = z.object({
+  ucn: z.string().min(10, "*").max(10, "Too long!"),
   first_name: z.string().min(1, "*"),
   last_name: z.string().min(1, "*"),
-  email: z.string().min(1, "*").email("Invalid email address!"),
-  username: z.string().min(1, "*"),
-  gender: z
+  date_of_birth: z.date(),
+  phone_number: z.string().min(1, "*"),
+  status: z
     .string()
-    .refine((val) => ["male", "female"].includes(val.toLowerCase()), {
-      message: "Invalid!",
-    }),
+    .refine(
+      (val) =>
+        ["student", "disabilities", "worker", "retiree"].includes(
+          val.toLowerCase()
+        ),
+      {
+        message: "Invalid!",
+      }
+    ),
 });
 
 type EditProfileSchemaType = z.infer<typeof editProfileSchema>;
@@ -25,9 +32,7 @@ type EditProfileSchemaType = z.infer<typeof editProfileSchema>;
 const ProfilePage = () => {
   const navigate = useNavigate();
 
-  const [, setSelectedImage] = useState<Blob | undefined>(
-    undefined
-  );
+  const [, setSelectedImage] = useState<Blob | undefined>(undefined);
   const [previewImage, setPreviewImage] = useState<string | undefined>(
     undefined
   );
@@ -51,8 +56,8 @@ const ProfilePage = () => {
     defaultValues: {
       first_name: "Ivaylo",
       last_name: "Abadzhiev",
-      email: "ivaylo@abv.bg",
-      username: "ivaylo",
+      date_of_birth: new Date(),
+      ucn: "0123456789",
     },
   });
 
@@ -137,20 +142,6 @@ const ProfilePage = () => {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
-          <div>
-            <div className="flex flex-row justify-between text-sm lg:text-base">
-              <label>Email:</label>
-              {errors.email && (
-                <span className="text-error pr-2">{errors.email.message}</span>
-              )}
-            </div>
-            <input
-              type="text"
-              {...register("email")}
-              className="text-sm lg:text-base w-full lg:p-2 p-1 border border-primary rounded-md focus:outline-none focus:border-blue-700 transition duration-200"
-            />
-          </div>
-
           <div className="flex flex-row gap-5">
             <div>
               <div className="flex flex-row justify-between text-sm lg:text-base">
@@ -186,36 +177,70 @@ const ProfilePage = () => {
           <div className="flex flex-row gap-5">
             <div className="flex-[2]">
               <div className="flex flex-row justify-between text-sm lg:text-base">
-                <label>Username:</label>
-                {errors.username && (
-                  <span className="text-error pr-2">
-                    {errors.username.message}
-                  </span>
+                <label>EGN:</label>
+                {errors.ucn && (
+                  <span className="text-error pr-2">{errors.ucn.message}</span>
                 )}
               </div>
               <input
                 type="text"
-                {...register("username")}
+                {...register("ucn")}
                 className="text-sm lg:text-base w-full lg:p-2 p-1 border border-primary rounded-md focus:outline-none focus:border-blue-700 transition duration-200"
               />
             </div>
             <div className="flex-1">
               <div className="flex flex-row justify-between text-sm lg:text-base">
-                <label>Gender:</label>
-                {errors.gender && (
+                <label>Status:</label>
+                {errors.status && (
                   <span className="text-error pr-2">
-                    {errors.gender.message}
+                    {errors.status.message}
                   </span>
                 )}
               </div>
               <select
-                {...register("gender")}
+                {...register("status")}
                 defaultValue="male"
                 className="text-sm lg:text-base w-full lg:p-2 p-1 border border-primary rounded-md focus:outline-none focus:border-blue-700 transition duration-200"
               >
-                <option value="male">Male</option>
-                <option value="female">Female</option>
+                <option value="student">Student</option>
+                <option value="disabilities">With Disabilities</option>
+                <option value="worker">Worker</option>
+                <option value="retiree">Retiree</option>
               </select>
+            </div>
+          </div>
+
+          <div className="flex flex-row gap-5">
+            <div className="flex-1">
+              <div className="flex flex-row justify-between text-sm lg:text-base">
+                <label>Date of birth:</label>
+                {errors.date_of_birth && (
+                  <span className="text-error pr-2">
+                    {errors.date_of_birth.message}
+                  </span>
+                )}
+              </div>
+              <input
+                type="date"
+                {...register("date_of_birth")}
+                className="text-sm lg:text-base w-full lg:p-2 p-1 border border-primary rounded-md focus:outline-none focus:border-blue-700 transition duration-200"
+              />
+            </div>
+
+            <div className="flex-[2]">
+              <div className="flex flex-row justify-between text-sm lg:text-base">
+                <label>Phone Number:</label>
+                {errors.phone_number && (
+                  <span className="text-error pr-2">
+                    {errors.phone_number.message}
+                  </span>
+                )}
+              </div>
+              <input
+                type="text"
+                {...register("phone_number")}
+                className="text-sm lg:text-base w-full lg:p-2 p-1 border border-primary rounded-md focus:outline-none focus:border-blue-700 transition duration-200"
+              />
             </div>
           </div>
 

@@ -36,7 +36,7 @@ const Navbar = () => {
   }, [isPopoverOpen]);
 
   return (
-    <div className="p-4 flex flex-row justify-between">
+    <div className="p-4 py-6 flex flex-row justify-between border-b-primary border-b-[1px] border-opacity-15">
       <div className="drawer z-50">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
@@ -75,11 +75,11 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/card">
+                <Link to="/passes">
                   <span className="text-accent">
                     <IdCard />
                   </span>{" "}
-                  Tickets & Cards
+                  Passes
                 </Link>
               </li>
               <li>

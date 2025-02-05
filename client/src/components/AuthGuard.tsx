@@ -4,11 +4,13 @@ import React, { ReactNode } from "react";
 
 const AuthGuard = ({
   element,
-  requireStaff,
+  requireStaff = false,
+  requireAdmin = false,
   ...rest
 }: {
   element: ReactNode;
   requireStaff?: boolean;
+  requireAdmin?: boolean;
 }) => {
   const isAuthorized = useAuth();
 
