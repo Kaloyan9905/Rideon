@@ -10,7 +10,7 @@ import axios, { AxiosResponse } from "axios";
 import { Save, Trash2, Undo2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { redirect, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -38,7 +38,9 @@ type EditProfileSchemaType = z.infer<typeof editProfileSchema>;
 const ProfilePage = () => {
   const navigate = useNavigate();
 
-  const [, setSelectedImage] = useState<Blob | undefined>(undefined);
+  const [selectedImage, setSelectedImage] = useState<Blob | undefined>(
+    undefined
+  );
   const [previewImage, setPreviewImage] = useState<string | undefined>(
     undefined
   );
@@ -52,9 +54,6 @@ const ProfilePage = () => {
           (await profileService.makeGetProfileRequest()) as AxiosResponse<ProfileVM>;
 
         setProfile(profileResponse.data);
-
-        console.log(profileResponse.data);
-        console.log(profile);
       })();
     } catch (error) {
       console.log(error);
@@ -108,7 +107,8 @@ const ProfilePage = () => {
         data.last_name,
         new Date(data.date_of_birth).toLocaleDateString("en-CA"),
         data.phone_number,
-        data.status
+        data.status,
+        selectedImage
       )
       .then(() => {
         profile!.ucn = data.ucn;
@@ -140,7 +140,7 @@ const ProfilePage = () => {
 
             toast.error(errorMessages);
           } else {
-            toast.error("An error occurred during sign in!");
+            toast.error("An error occurred!");
           }
         }
       });
@@ -171,7 +171,7 @@ const ProfilePage = () => {
 
             toast.error(errorMessages);
           } else {
-            toast.error("An error occurred during sign in!");
+            toast.error("An error occurred!");
           }
         }
       });
@@ -197,7 +197,9 @@ const ProfilePage = () => {
                 <label htmlFor="profile-picture-input">
                   <img
                     src={
-                      previewImage
+                      profile.profile_image
+                        ? profile.profile_image
+                        : previewImage
                         ? previewImage
                         : "https://www.shutterstock.com/image-illustration/leather-background-jpeg-version-260nw-101031550.jpg"
                     }

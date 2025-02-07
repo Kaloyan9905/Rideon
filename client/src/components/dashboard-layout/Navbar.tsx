@@ -75,7 +75,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/card">
+                <Link to="/passes">
                   <span className="text-accent">
                     <IdCard />
                   </span>{" "}
@@ -104,9 +104,9 @@ const Navbar = () => {
 
       <div className="flex flex-row gap-7">
         <div className="avatar">
-          <div className="rounded-2xl w-12 h-12 ring-secondary ring ring-offset-2">
+          <div className="rounded-full w-12 h-12 ring-secondary ring">
             <img
-              src="https://www.shutterstock.com/image-illustration/leather-background-jpeg-version-260nw-101031550.jpg"
+              src="https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg"
               alt="Profile Picture"
               className="cursor-pointer"
               onClick={togglePopover}

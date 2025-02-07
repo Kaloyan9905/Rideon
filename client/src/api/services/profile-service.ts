@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { BASE_URL } from "../base";
 import { WebApiService } from "./web-api-service";
-import { ProfileUM, ProfileVM } from "../types/profile";
+import { ProfileVM } from "../types/profile";
 
 class ProfileService extends WebApiService {
   PROFILE_URL = `${BASE_URL}/api/profile`.replace(/\/+$/, "");
@@ -11,27 +11,30 @@ class ProfileService extends WebApiService {
   }
 
   public async makeUpdateProfileRequest(
-    ucn: string,
-    first_name: string,
-    last_name: string,
-    date_of_birth: string,
-    phone_number: string,
-    status: string
+    ucn?: string | undefined,
+    first_name?: string | undefined,
+    last_name?: string | undefined,
+    date_of_birth?: string | undefined,
+    phone_number?: string | undefined,
+    status?: string | undefined,
+    selectedImage?: Blob | undefined,
   ): Promise<AxiosResponse<void, any>> {
-    const profileUM: ProfileUM = {
-      ucn: ucn,
-      first_name: first_name,
-      last_name: last_name,
-      date_of_birth: date_of_birth,
-      phone_number: phone_number,
-      status: status,
-    };
+    const formData = new FormData();
 
-    return await axios.put(
-      `${this.PROFILE_URL}/`,
-      profileUM,
-      this.generateHeader()
-    );
+    if (ucn !== undefined) formData.append("ucn", ucn);
+    if (first_name !== undefined) formData.append("first_name", first_name);
+    if (last_name !== undefined) formData.append("last_name", last_name);
+    if (date_of_birth !== undefined)
+      formData.append("date_of_birth", date_of_birth);
+    if (phone_number !== undefined)
+      formData.append("phone_number", phone_number);
+    if (status !== undefined) formData.append("status", status);
+
+    if (selectedImage) {
+      formData.append("profile_image", selectedImage);
+    }
+
+    return await axios.put(`${this.PROFILE_URL}/`, formData, this.generateHeader());
   }
 
   public async makeDeleteProfileRequest() {
