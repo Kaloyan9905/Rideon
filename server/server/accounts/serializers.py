@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from server.accounts.models import UserProfile
+from server.passes.models import Ticket, Card
 from server.passes.serializers import CardSerializer, TicketSerializer
 
 
@@ -13,9 +14,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ['user']
 
     @staticmethod
-    def get_user_card(card):
-        return CardSerializer(card.card_files, many=True).data
+    def get_card(obj):
+        card = Card.objects.filter(owner=obj).first()
+        return CardSerializer(card).data if card else None
 
     @staticmethod
-    def get_user_tickets(ticket):
-        return TicketSerializer(ticket.ticket_files, many=True).data
+    def get_tickets(obj):
+        tickets = Ticket.objects.filter(owner=obj)
+        return TicketSerializer(tickets, many=True).data
