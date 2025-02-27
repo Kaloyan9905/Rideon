@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.db import models
 
 from server.accounts.models import UserProfile
+from server.qr_codes.models import QRCode
 
 
 class Pass(models.Model):
@@ -21,7 +22,7 @@ class Pass(models.Model):
     )
     owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
-    # qr_code = models.OneToOneField(QRCode, on_delete=models.CASCADE)
+    qr_code = models.OneToOneField(QRCode, null=True, blank=True, on_delete=models.CASCADE)
 
     class Meta:
         abstract = True
