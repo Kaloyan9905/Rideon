@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.db import models
 
 from server.accounts.models import UserProfile
+from server.validator.models import QRCode
 
 
 class Pass(models.Model):
@@ -19,9 +20,8 @@ class Pass(models.Model):
         blank=True,
         editable=False,
     )
-    owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
-    # qr_code = models.OneToOneField(QRCode, on_delete=models.CASCADE)
+    qr_code = models.OneToOneField(QRCode, on_delete=models.CASCADE)
 
     class Meta:
         abstract = True
@@ -29,9 +29,6 @@ class Pass(models.Model):
     @staticmethod
     def generate_serial_number():
         return str(uuid.uuid4())[:14]
-
-    def is_expired(self):
-        return self.expires_at < timezone.now()
 
     def save(self, *args, **kwargs):
         if not self.serial_number:
@@ -63,8 +60,8 @@ class ReusablePass(Pass):
 
 
 class Ticket(SingleUsePass):
-    pass
+    owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='tickets')
 
 
 class Card(ReusablePass):
-    pass
+    owner = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='card')
