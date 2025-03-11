@@ -1,26 +1,21 @@
+import io
 import qrcode
-from io import BytesIO
-from django.db import models
 from django.core.files.base import ContentFile
+from django.db import models
 
 
 class QRCode(models.Model):
     image = models.ImageField(upload_to='qr_codes/', null=True, blank=True)
 
-    def generate_qr_code(self, data, expires_at):
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
+    def generate_qr_code(self, serial_number, expires_at):
+        qr_data = {
+            'serial_number': serial_number,
+            'expires_at': expires_at.isoformat() if expires_at else None
+        }
 
-        qr.add_data(f"{data}|{expires_at}")
-        qr.make(fit=True)
+        qr = qrcode.make(str(qr_data))
+        qr_bytes = io.BytesIO()
+        qr.save(qr_bytes, format='PNG')
 
-        img = qr.make_image(fill='black', back_color='white')
-
-        buffer = BytesIO()
-        img.save(buffer, format='PNG')
-        buffer.seek(0)
-        self.image.save(f'{data}_qr.png', ContentFile(buffer.read()), save=False)
+        self.image.save(f'qr_{serial_number}.png', ContentFile(qr_bytes.getvalue()), save=False)
+        self.save()

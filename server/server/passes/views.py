@@ -1,6 +1,3 @@
-from datetime import timedelta
-
-from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
@@ -15,12 +12,6 @@ class CardCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Card.objects.all()
     serializer_class = CardSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(
-            owner=self.request.user.profile,
-            expires_at=timezone.now() + timedelta(days=30)
-        )
 
 
 class DetailsCardAPIView(generics.ListAPIView):
