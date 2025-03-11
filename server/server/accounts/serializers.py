@@ -10,7 +10,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ['id', 'first_name', 'last_name', 'card', 'tickets']
+        fields = ['id', 'first_name', 'last_name', 'ucn', 'date_of_birth', 'phone_number', 'card', 'tickets']
         read_only_fields = ['user']
 
     @staticmethod
