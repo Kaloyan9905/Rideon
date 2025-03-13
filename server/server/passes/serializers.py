@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from server.passes.models import Ticket, Card
+from server.validator.serializers import QRCodeSerializer
 
 
 class TicketSerializer(serializers.ModelSerializer):
