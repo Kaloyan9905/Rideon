@@ -52,7 +52,10 @@ const Navbar = () => {
             className="drawer-overlay"
           ></label>
           <div className="menu bg-base-200 text-base-content h-screen lg:w-[20%] w-[70%] p-4 flex flex-col">
-            <div className="flex flex-row text-3xl font-montserrat font-semibold justify-center">
+            <div
+              className="flex flex-row text-3xl font-montserrat font-semibold justify-center cursor-pointer"
+              onClick={() => navigate("/")}
+            >
               <span className="text-accent">
                 R<span className="text-primary">i</span>de
               </span>

@@ -10,7 +10,7 @@ const PassesPage = () => {
 
   return (
     <DashboardLayout>
-      <MaxWidthWrapper className="">
+      <MaxWidthWrapper>
         <div className="mockup-window bg-base-200 border mt-32 mx-12">
           <div className="m-7">
             <div className="flex flex-row justify-between items-center font-montserrat">
@@ -46,10 +46,14 @@ const PassesPage = () => {
               </div>
             </div>
 
-            <div className="flex justify-center items-center mt-16 mb-8">
-              {activeTab === 1 && <CardTab />}
-              {activeTab === 2 && <TicketTab />}
-              <FaqTab/>
+            <div className="flex flex-row items-center justify-center gap-8 mt-16 mb-8">
+              <div className="flex-1 flex justify-center">
+                {activeTab === 1 && <CardTab />}
+                {activeTab === 2 && <TicketTab />}
+              </div>
+              <div className="flex-1 flex justify-center">
+                <FaqTab />
+              </div>
             </div>
           </div>
         </div>
