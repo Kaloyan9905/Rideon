@@ -5,7 +5,9 @@ const TicketTab = () => {
   const [tickets, setTickets] = useState<any[]>([]); // Store purchased tickets
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-
+  useEffect(() => {
+    setTickets([]);
+  }, []);
   // Fetch the user's profile and tickets
   const fetchUserProfileAndTickets = async () => {
     try {
