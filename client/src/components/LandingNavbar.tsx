@@ -25,6 +25,12 @@ const LandingNavbar = ({
             <span className="text-primary">on</span>
           </h2>
           <div className="flex flex-row gap-7 items-center justify-center">
+            <a
+              className="btn btn-secondary"
+              href="/validator"
+            > 
+              Validator
+            </a>
             <button
               className="btn btn-secondary"
               onClick={() => handleGetStarted()}

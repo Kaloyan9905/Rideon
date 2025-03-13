@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import ticketService from "@/api/services/ticket-service";
+import { useState, useEffect } from "react";
+// import ticketService from "@/api/services/ticket-service";
 
-const TicketTab: React.FC = () => {
+const TicketTab = () => {
   const [tickets, setTickets] = useState<any[]>([]); // Store purchased tickets
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -9,15 +9,15 @@ const TicketTab: React.FC = () => {
   // Fetch the user's profile and tickets
   const fetchUserProfileAndTickets = async () => {
     try {
-      const profileResponse = await ticketService.getUserProfile();
-      const userProfile = profileResponse.data;
+      // const profileResponse = await ticketService.getUserProfile();
+      // const userProfile = profileResponse.data;
 
       // Check if the user has tickets
-      if (userProfile.tickets && userProfile.tickets.length > 0) {
-        setTickets(userProfile.tickets); // Set the tickets if they exist
-      } else {
-        setTickets([]); // No tickets exist
-      }
+      // if (userProfile.tickets && userProfile.tickets.length > 0) {
+      //   setTickets(userProfile.tickets); // Set the tickets if they exist
+      // } else {
+      //   setTickets([]); // No tickets exist
+      // }
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -33,23 +33,23 @@ const TicketTab: React.FC = () => {
     fetchUserProfileAndTickets();
   }, []);
 
-  const handlePurchaseTicket = async () => {
-    try {
-      // Purchase a new ticket
-      const res = await ticketService.purchaseTicket();
+  // const handlePurchaseTicket = async () => {
+  //   try {
+  //     // Purchase a new ticket
+  //     const res = await ticketService.purchaseTicket();
 
-      // Add the new ticket to the existing tickets
-      setTickets((prevTickets) => [...prevTickets, res.data]);
+  //     // Add the new ticket to the existing tickets
+  //     setTickets((prevTickets) => [...prevTickets, res.data]);
 
-      setError(null);
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unknown error occurred");
-      }
-    }
-  };
+  //     setError(null);
+  //   } catch (err) {
+  //     if (err instanceof Error) {
+  //       setError(err.message);
+  //     } else {
+  //       setError("An unknown error occurred");
+  //     }
+  //   }
+  // };
 
   if (loading) {
     return (
@@ -60,7 +60,7 @@ const TicketTab: React.FC = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="max-w-2xl p-6 bg-white rounded-lg shadow-lg">
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
         {tickets.length > 0 ? "Your Purchased Tickets" : "Purchase Ticket"}
       </h1>
@@ -99,7 +99,7 @@ const TicketTab: React.FC = () => {
         <div className="flex flex-col items-center space-y-6">
           <p className="text-gray-600">You have no purchased tickets. Purchase a new ticket:</p>
           <button
-            onClick={handlePurchaseTicket}
+            // onClick={handlePurchaseTicket}
             className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg"
           >
             Purchase Ticket
@@ -111,7 +111,7 @@ const TicketTab: React.FC = () => {
       {tickets.length > 0 && (
         <div className="mt-8 flex justify-center">
           <button
-            onClick={handlePurchaseTicket}
+            // onClick={handlePurchaseTicket}
             className="px-8 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-lg"
           >
             Purchase Another Ticket
