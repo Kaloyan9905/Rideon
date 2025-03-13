@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import passService from "@/api/services/pass-service";
 
-const CreatePassComponent: React.FC = () => {
+const CreatePassComponent = () => {
   const [expiresAt, setExpiresAt] = useState<string>("");
   const [pass, setPass] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
@@ -10,15 +10,15 @@ const CreatePassComponent: React.FC = () => {
   useEffect(() => {
     const fetchUserProfileAndPass = async () => {
       try {
-      
+
         const profileResponse = await passService.getUserProfile();
         const userProfile = profileResponse.data;
 
-       
+
         if (userProfile.card) {
-          setPass(userProfile.card); 
+          setPass(userProfile.card);
         } else {
-          setPass(null); 
+          setPass(null);
         }
       } catch (err) {
         if (err instanceof Error) {
@@ -37,7 +37,7 @@ const CreatePassComponent: React.FC = () => {
   const handleCreatePass = async () => {
     try {
       const res = await passService.createPass(expiresAt);
-      setPass(res.data); 
+      setPass(res.data);
       setError(null);
     } catch (err) {
       if (err instanceof Error) {
@@ -53,39 +53,39 @@ const CreatePassComponent: React.FC = () => {
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
-    ); 
+    );
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
-        {pass ? "Your Card" : "Create Card"}
-      </h1>
-
+    <div className="basis-128 rounded-lg shadow-lg bg-gradient-to-bl from-slate-800 via-slate-600 via-40% to-zinc-400 ">
       {pass ? (
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Your Card Details:</h2>
+        <div className="p-8 rounded-lg shadow-lg">
           <div className="space-y-4">
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <p className="text-gray-700">
-                <span className="font-semibold">ID:</span> {pass.pk}
-              </p>
+            <div className="flex gap-10 items-start">
+              <div>
+                <img className="rounded-2xl" src="https://randomqr.com/assets/images/rickroll-qrcode.webp" />
+              </div>
+              <div className="flex flex-col justify-between flex-1">
+                <div className="p-4 rounded-lg">
+                  <p className="text-white">
+                    <span className="font-semibold">Serial Number:</span> {pass.serial_number}
+                  </p>
+                </div>
+                <div className="p-4 rounded-lg">
+                  <h2 className="text-slate-200 text-2xl flex items-center">
+                    <span className="font-semibold me-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 512 512">
+                        <path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120l0 136c0 8 4 15.5 10.7 20l96
+             64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 
+             10.7-24 24z" />
+                      </svg>
+                    </span> {new Date(pass.expires_at).toLocaleString()}
+                  </h2>
+                </div>
+              </div>
             </div>
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <p className="text-gray-700">
-                <span className="font-semibold">Serial Number:</span> {pass.serial_number}
-              </p>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <p className="text-gray-700">
-                <span className="font-semibold">Owner:</span> {pass.owner}
-              </p>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <p className="text-gray-700">
-                <span className="font-semibold">Expires At:</span> {new Date(pass.expires_at).toLocaleString()}
-              </p>
-            </div>
+
+
           </div>
         </div>
       ) : (
@@ -98,7 +98,7 @@ const CreatePassComponent: React.FC = () => {
           />
           <button
             onClick={handleCreatePass}
-            className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg"
+            className="px-8 py-3 bg-bflue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg"
           >
             Create Card
           </button>

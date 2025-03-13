@@ -12,11 +12,13 @@ import ProfilePage from "./pages/ProfilePage";
 import DashboardPage from "./pages/DashboardPage";
 import AuthGuard from "./components/AuthGuard";
 import PassesPage from "./pages/PassesPage";
+import ValidatorPage from "./pages/ValidatorPage";
 
 const App = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route index path="/" element={<LandingPage />} />
+      <Route index path="/validator" element={<ValidatorPage />} />
       <Route path="/sign-up" element={<SignUpPage />} />
       <Route path="/sign-in" element={<SignInPage />} />
       <Route
