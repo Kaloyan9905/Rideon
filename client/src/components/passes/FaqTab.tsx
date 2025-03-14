@@ -24,16 +24,16 @@ const FaqTab = () => {
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto p-4">
+    <div className="w-full max-w-xl mx-auto p-4 flex flex-col gap-3">
       {faqs.map((faq, index) => (
         <div
           key={index}
-          className={`mb-4 border border-gray-300 rounded-lg ${
-            openIndex === index ? "bg-slate-800 " : ""
+          className={`{mb-4 border-2 rounded-lg ${
+            openIndex === index ? "border-primary" : "border-gray-500"
           }`}
         >
           <button
-            className="w-full text-left p-3 font-semibold  hover:bg-slate-800 rounded-md"
+            className="w-full text-left p-3 font-semibold decoration-secondary rounded-md"
             onClick={() => toggleFaq(index)}
           >
             {faq.question}
@@ -43,7 +43,7 @@ const FaqTab = () => {
               openIndex === index ? "max-h-40 p-3 " : "max-h-0"
             }`}
           >
-            <p className="text-white">{faq.answer}</p>
+            <p className="decoration-secondary">{faq.answer}</p>
           </div>
         </div>
       ))}

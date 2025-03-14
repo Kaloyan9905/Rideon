@@ -52,46 +52,42 @@ const TicketTab = () => {
   //     }
   //   }
   // };
-
+  
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
-    ); // Show a loading spinner while fetching data
+    ); 
   }
 
   return (
-    <div className="max-w-2xl p-6 bg-white rounded-lg shadow-lg">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+    <div className="w-full p-6  rounded-xl shadow-xl border border-gray-500/50 backdrop-blur-md">
+      <h1 className="text-3xl font-bold text-center decoration-secondary mb-6">
         {tickets.length > 0 ? "Your Purchased Tickets" : "Purchase Ticket"}
       </h1>
 
       {tickets.length > 0 ? (
         <div className="space-y-6">
           {tickets.map((ticket, index) => (
-            <div key={index} className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Ticket #{index + 1}</h2>
-              <div className="space-y-4">
-                <div className="bg-white p-4 rounded-lg shadow-sm">
-                  <p className="text-gray-700">
-                    <span className="font-semibold">ID:</span> {ticket.pk}
-                  </p>
+            <div key={index} className="bg-white/10 p-5 rounded-lg shadow-lg border border-white/20 backdrop-blur-md">
+              <h2 className="text-lg font-semibold decoration-secondary mb-3">🎟️ Ticket #{index + 1}</h2>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white/10 p-3 rounded-md shadow-sm border border-white/20 backdrop-blur-lg">
+                  <p className="text-gray-300 font-medium">ID</p>
+                  <p className="decoration-secondary">{ticket.pk}</p>
                 </div>
-                <div className="bg-white p-4 rounded-lg shadow-sm">
-                  <p className="text-gray-700">
-                    <span className="font-semibold">Serial Number:</span> {ticket.serial_number}
-                  </p>
+                <div className="bg-white/10 p-3 rounded-md shadow-sm border border-white/20 backdrop-blur-lg">
+                  <p className="text-gray-300 font-medium">Serial Number</p>
+                  <p className="decoration-secondary">{ticket.serial_number}</p>
                 </div>
-                <div className="bg-white p-4 rounded-lg shadow-sm">
-                  <p className="text-gray-700">
-                    <span className="font-semibold">Owner:</span> {ticket.owner}
-                  </p>
+                <div className="bg-white/10 p-3 rounded-md shadow-sm border border-white/20 backdrop-blur-lg">
+                  <p className="text-gray-300 font-medium">Owner</p>
+                  <p className="decoration-secondary">{ticket.owner}</p>
                 </div>
-                <div className="bg-white p-4 rounded-lg shadow-sm">
-                  <p className="text-gray-700">
-                    <span className="font-semibold">Expires At:</span> {new Date(ticket.expires_at).toLocaleString()}
-                  </p>
+                <div className="bg-white/10 p-3 rounded-md shadow-sm border border-white/20 backdrop-blur-lg">
+                  <p className="text-gray-300 font-medium">Expires At</p>
+                  <p className="decoration-secondary">{new Date(ticket.expires_at).toLocaleString()}</p>
                 </div>
               </div>
             </div>
@@ -99,32 +95,25 @@ const TicketTab = () => {
         </div>
       ) : (
         <div className="flex flex-col items-center space-y-6">
-          <p className="text-gray-600">You have no purchased tickets. Purchase a new ticket:</p>
-          <button
-            // onClick={handlePurchaseTicket}
-            className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg"
-          >
-            Purchase Ticket
+          <p className="decoration-secondary">You have no purchased tickets. Get one now:</p>
+          <button className="px-6 py-3 border-2 border-primary text-primary font-semibold rounded-lg hover:bg-green-500/10 transition-all shadow-md">
+            Buy Ticket
           </button>
         </div>
       )}
 
-      {/* Show the "Purchase Ticket" button even if the user has tickets */}
       {tickets.length > 0 && (
         <div className="mt-8 flex justify-center">
-          <button
-            // onClick={handlePurchaseTicket}
-            className="px-8 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-lg"
-          >
-            Purchase Another Ticket
+          <button className="px-6 py-3 border-2 border-green-500 text-green-400 font-semibold rounded-lg hover:bg-green-500/10 transition-all shadow-md">
+            Buy Another Ticket
           </button>
         </div>
       )}
 
       {error && (
-        <div className="mt-8 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <h2 className="text-lg font-semibold text-red-700">Error:</h2>
-          <p className="text-red-600">{error}</p>
+        <div className="mt-6 p-4 bg-red-500/10 border border-red-400/50 text-red-300 rounded-lg">
+          <h2 className="text-lg font-semibold">Error:</h2>
+          <p>{error}</p>
         </div>
       )}
     </div>

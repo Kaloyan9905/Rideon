@@ -1,4 +1,5 @@
 interface BasePass {
+  pk: number;
   created_at: string;
   updated_at: string;
   expires_at: string;
