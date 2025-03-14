@@ -17,7 +17,9 @@ class PassesService extends WebApiService {
 
   public async makeUpdateCardRequest() {}
 
-  public async makeDeleteCardRequest() {}
+  public async makeDeleteCardRequest(id: number) {
+    return await axios.delete(`${this.PASSES_URL}/${id}/delete-card/`, this.generateHeader());
+  }
 
   public async makeGetCardDetailsRequest(id: number) {
     return await axios.get(
