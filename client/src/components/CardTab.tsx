@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import passesService from "@/services/card-service";
 import profileService from "@/services/profile-service";
 import { CardVM } from "@/types/pass";
-import { Trash2, RefreshCw, X } from "lucide-react";
+import { Trash2, CalendarSync, X } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface QRCodeModalProps {
@@ -90,13 +90,13 @@ const CardTab: React.FC = () => {
     }
   };
 
-  const handleUpdateCard = async () => {
-    // TODO: Implement card update logic
-    console.log("Update card clicked");
+  const handleUpdateCard = async (expires_at: string) => {
+    await passesService.makeUpdateCardRequest(card!.pk, expires_at);
+    await fetchCard();
   };
 
   const handleDeleteCard = async () => {
-    passesService.makeDeleteCardRequest(card!.pk);
+    await passesService.makeDeleteCardRequest(card!.pk);
     setCard(null);
   };
 
@@ -217,11 +217,18 @@ const CardTab: React.FC = () => {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={handleUpdateCard}
+                      onClick={async () => {
+                        await handleUpdateCard(
+                          new Date(Date.now()).toISOString()
+                        );
+                      }}
                       className="p-3 bg-info/10 hover:bg-info/20 rounded-xl transition-colors"
                       aria-label="Update card"
                     >
-                      <RefreshCw className="w-5 h-5 sm:w-6 sm:h-6 text-info" />
+                      <CalendarSync
+                        onClick={() => {}}
+                        className="w-5 h-5 sm:w-6 sm:h-6 text-info"
+                      />
                     </motion.button>
                     <motion.button
                       whileHover={{ scale: 1.05 }}

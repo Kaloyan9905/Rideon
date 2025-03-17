@@ -12,6 +12,7 @@ export interface ProfileVM {
   document?: string | null;
   card?: CardVM | null;
   tickets?: TicketVM[] | null;
+  balance?: number | null;
 }
 
 export interface ProfileUM {
