@@ -24,7 +24,7 @@ const FaqTab = () => {
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto p-4 flex flex-col gap-3">
+    <div className="w-full max-w-xl mx-auto py-4 flex flex-col gap-3">
       {faqs.map((faq, index) => (
         <div
           key={index}

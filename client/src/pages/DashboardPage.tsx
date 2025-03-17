@@ -17,23 +17,23 @@ const DashboardPage = () => {
   return (
     <DashboardLayout>
       <MaxWidthWrapper
-        className="pt-36 px-24 flex flex-col gap-3"
+        className="pt-36 xl:px-24 flex flex-col gap-3"
         maxWidth="w-screen"
       >
         <h1 className="text-center text-4xl font-montserrat font-extrabold underline underline-offset-4 decoration-secondary mb-11">
           Dashboard
         </h1>
-
-        <div className="mb-5">
-          <h1 className="text-2xl font-montserrat">User stats:</h1>
+        <div className="mb-5 lg:my-5 bg-green-800 w-fit px-3 py-1 rounded-3xl">
+          <h1 className="text-2xl font-montserrat text-white">User stats:</h1>
         </div>
+
         <UserStats
           activeCard={userStatsData.activeCard}
           ticketsBought={userStatsData.ticketsBought}
           balance={userStatsData.balance}
         />
-        <div className="my-5">
-          <h1 className="text-2xl font-montserrat">Recent Activity:</h1>
+        <div className="mt-16 mb-5 lg:my-5 bg-red-800 w-fit px-3 py-1 rounded-3xl">
+          <h1 className="text-2xl font-montserrat text-white">Recent Activity:</h1>
         </div>
         <PaymentCard purchases={purchases} />
       </MaxWidthWrapper>
