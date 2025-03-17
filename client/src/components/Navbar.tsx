@@ -3,6 +3,9 @@ import { Link, useLocation, useNavigate } from "react-router";
 import ThemeSwitcher from "./theme/ThemeSwitcher";
 import { useEffect, useRef, useState } from "react";
 import storageService from "@/services/storage-service";
+import { ProfileVM } from "@/types/profile";
+import { AxiosResponse } from "axios";
+import profileService from "@/services/profile-service";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -22,6 +25,21 @@ const Navbar = () => {
       setIsPopoverOpen(false);
     }
   }
+
+  const [profile, setProfile] = useState<ProfileVM | null>(null);
+
+  useEffect(() => {
+    try {
+      (async () => {
+        const profileResponse =
+          (await profileService.makeGetProfileRequest()) as AxiosResponse<ProfileVM>;
+
+        setProfile(profileResponse.data);
+      })();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   useEffect(() => {
     if (isPopoverOpen) {
@@ -105,7 +123,9 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="flex flex-row gap-7">
+      <div className="flex flex-row gap-7 items-center">
+        <p className="text-lg">${profile?.balance ?? 215}</p>
+
         <div className="avatar">
           <div className="rounded-full w-12 h-12 ring-secondary ring">
             <img
