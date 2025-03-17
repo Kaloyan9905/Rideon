@@ -143,7 +143,17 @@ const SignInPage = () => {
           </Link>
         </div>
       </form>
-
+      <div className="absolute top-5 left-5">
+        <h2
+          className="sm:text-2xl text-xl font-montserrat font-bold cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          <span className="text-accent">
+            R<span className="text-primary">i</span>de
+          </span>
+          <span className="text-primary">on</span>
+        </h2>
+      </div>
       <ThemeSwitcher absolute />
     </MaxWidthWrapper>
   );
