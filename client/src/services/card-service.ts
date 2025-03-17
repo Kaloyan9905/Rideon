@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL } from "../base";
+import { BASE_URL } from "./base";
 import { WebApiService } from "./web-api-service";
 
 class PassesService extends WebApiService {

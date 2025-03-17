@@ -1,7 +1,7 @@
-import authService from "@/api/services/auth-service";
-import storageService from "@/api/services/storage-service";
-import { AuthResponseData } from "@/api/types/auth";
-import { LoadingSpinner } from "@/components/loading/LoadingSpinner";
+import authService from "@/services/auth-service";
+import storageService from "@/services/storage-service";
+import { AuthResponseData } from "@/types/auth";
+import { LoadingSpinner } from "@/components/LoadingComponents";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ThemeSwitcher from "@/components/theme/ThemeSwitcher";
 import { zodResolver } from "@hookform/resolvers/zod";

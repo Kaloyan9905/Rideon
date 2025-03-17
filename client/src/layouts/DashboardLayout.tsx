@@ -1,4 +1,4 @@
-import Navbar from "@/components/dashboard-layout/Navbar";
+import Navbar from "@/components/Navbar";
 import { ReactNode } from "react";
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {

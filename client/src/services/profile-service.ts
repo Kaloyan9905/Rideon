@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { BASE_URL } from "../base";
+import { BASE_URL } from "./base";
 import { WebApiService } from "./web-api-service";
 import { ProfileVM } from "../types/profile";
 

@@ -13,7 +13,6 @@ const TicketTab = () => {
     try {
       // const profileResponse = await ticketService.getUserProfile();
       // const userProfile = profileResponse.data;
-
       // Check if the user has tickets
       // if (userProfile.tickets && userProfile.tickets.length > 0) {
       //   setTickets(userProfile.tickets); // Set the tickets if they exist
@@ -52,13 +51,13 @@ const TicketTab = () => {
   //     }
   //   }
   // };
-  
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
-    ); 
+    );
   }
 
   return (
@@ -70,8 +69,13 @@ const TicketTab = () => {
       {tickets.length > 0 ? (
         <div className="space-y-6">
           {tickets.map((ticket, index) => (
-            <div key={index} className="bg-white/10 p-5 rounded-lg shadow-lg border border-white/20 backdrop-blur-md">
-              <h2 className="text-lg font-semibold decoration-secondary mb-3">🎟️ Ticket #{index + 1}</h2>
+            <div
+              key={index}
+              className="bg-white/10 p-5 rounded-lg shadow-lg border border-white/20 backdrop-blur-md"
+            >
+              <h2 className="text-lg font-semibold decoration-secondary mb-3">
+                🎟️ Ticket #{index + 1}
+              </h2>
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-white/10 p-3 rounded-md shadow-sm border border-white/20 backdrop-blur-lg">
                   <p className="text-gray-300 font-medium">ID</p>
@@ -87,7 +91,9 @@ const TicketTab = () => {
                 </div>
                 <div className="bg-white/10 p-3 rounded-md shadow-sm border border-white/20 backdrop-blur-lg">
                   <p className="text-gray-300 font-medium">Expires At</p>
-                  <p className="decoration-secondary">{new Date(ticket.expires_at).toLocaleString()}</p>
+                  <p className="decoration-secondary">
+                    {new Date(ticket.expires_at).toLocaleString()}
+                  </p>
                 </div>
               </div>
             </div>
@@ -95,7 +101,9 @@ const TicketTab = () => {
         </div>
       ) : (
         <div className="flex flex-col items-center space-y-6">
-          <p className="decoration-secondary">You have no purchased tickets. Get one now:</p>
+          <p className="decoration-secondary">
+            You have no purchased tickets. Get one now:
+          </p>
           <button className="px-6 py-3 border-2 border-primary text-primary font-semibold rounded-lg hover:bg-green-500/10 transition-all shadow-md">
             Buy Ticket
           </button>

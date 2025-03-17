@@ -1,6 +1,6 @@
 import { motion, useScroll, useSpring } from "motion/react";
-import MaxWidthWrapper from "./MaxWidthWrapper";
-import ThemeSwitcher from "./theme/ThemeSwitcher";
+import MaxWidthWrapper from "../MaxWidthWrapper";
+import ThemeSwitcher from "../theme/ThemeSwitcher";
 import { useNavigate } from "react-router";
 
 const LandingNavbar = ({
