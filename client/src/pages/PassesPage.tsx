@@ -11,14 +11,14 @@ const PassesPage = () => {
   return (
     <DashboardLayout>
       <MaxWidthWrapper>
-        <div className="mockup-window bg-base-200 border mt-32 mx-12">
+        <div className="mockup-window bg-base-200 border mt-32 lg:mx-12 x-2">
           <div className="m-7">
-            <div className="flex flex-row justify-between items-center font-montserrat">
-              <p className="text-xl font-bold">My Documents:</p>
+            <div className="flex flex-col lg:flex-row justify-between lg:items-center font-montserrat">
+              <p className="text-xl font-bold mb-5 lg:mb-0">My Documents:</p>
 
               <div
                 role="tablist"
-                className="tabs tabs-bordered flex flex-row justify-center font-montserrat font-bold"
+                className="tabs tabs-bordered flex flex-row lg:justify-center font-montserrat font-bold"
               >
                 <a
                   role="tab"
@@ -46,8 +46,8 @@ const PassesPage = () => {
               </div>
             </div>
 
-            <div className="flex flex-row items-center justify-center gap-8 mt-16 mb-8">
-              <div className="flex-1 flex justify-center">
+            <div className="flex flex-col lg:flex-row items-center justify-center gap-8 mt-16 mb-8">
+              <div className="flex-1 w-full flex justify-center">
                 {activeTab === 1 && <CardTab />}
                 {activeTab === 2 && <TicketTab />}
               </div>

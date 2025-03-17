@@ -22,7 +22,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({ purchases }) => {
               <h2 className='text-lg font-bold mb-4'>You bought a: {purchase.type === 'Card' ? "Card" : 'Ticket'} </h2>
               <p><strong>Type:</strong> {purchase.type}</p>
               <p><strong>Date:</strong> {purchase.date}</p>
-            </div>
+            </div> 
             <div>
               <img src='https://cdn-icons-png.freepik.com/512/8831/8831443.png?uid=R100586331&ga=GA1.1.328462767.1719580284' alt="Payments" className="w-24 h-24 object-cover" />
             </div>

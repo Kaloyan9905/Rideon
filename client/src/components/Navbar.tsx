@@ -124,8 +124,6 @@ const Navbar = () => {
       </div>
 
       <div className="flex flex-row gap-7 items-center">
-        <p className="text-lg">${profile?.balance ?? 215}</p>
-
         <div className="avatar">
           <div className="rounded-full w-12 h-12 ring-secondary ring">
             <img
