@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import passesService from "@/api/services/card-service";
-import profileService from "@/api/services/profile-service";
-import { CardVM } from "@/api/types/pass";
+import passesService from "@/services/card-service";
+import profileService from "@/services/profile-service";
+import { CardVM } from "@/types/pass";
 import { Trash2, RefreshCw, X } from "lucide-react";
 import { motion } from "framer-motion";
 

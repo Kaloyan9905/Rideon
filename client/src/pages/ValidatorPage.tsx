@@ -1,5 +1,5 @@
 import Footer from "@/components/Footer";
-import LandingNavbar from "@/components/LandingNavbar";
+import LandingNavbar from "@/components/landing/LandingNavbar";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ValidatorBody from "@/components/ValidatorBody";
 import { useAuth } from "@/hooks/useAuth";

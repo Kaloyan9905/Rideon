@@ -3,7 +3,9 @@ import { Html5QrcodeScanner } from "html5-qrcode";
 
 const ValidatorBody = () => {
   const [scanResult, setScanResult] = useState<string | null>(null);
-  const [status, setStatus] = useState<"pending" | "valid" | "invalid" | null>(null);
+  const [status, setStatus] = useState<"pending" | "valid" | "invalid" | null>(
+    null
+  );
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -23,10 +25,12 @@ const ValidatorBody = () => {
         (error) => console.warn(error)
       );
       return () => {
-        scanner.clear().catch((err) => console.warn("Scanner clear error:", err));
+        scanner
+          .clear()
+          .catch((err) => console.warn("Scanner clear error:", err));
       };
     }
-  }, [scanResult]); 
+  }, [scanResult]);
 
   return (
     <div className="mt-44 flex flex-col gap-7 items-center">
@@ -44,9 +48,13 @@ const ValidatorBody = () => {
             Scanned Code: <span className="text-primary">{scanResult}</span>
           </p>
           {status === "valid" ? (
-            <p className="text-green-500 text-xl font-bold mt-3">✔ Valid Ticket</p>
+            <p className="text-green-500 text-xl font-bold mt-3">
+              ✔ Valid Ticket
+            </p>
           ) : (
-            <p className="text-red-500 text-xl font-bold mt-3">✘ Invalid Ticket</p>
+            <p className="text-red-500 text-xl font-bold mt-3">
+              ✘ Invalid Ticket
+            </p>
           )}
         </div>
       )}

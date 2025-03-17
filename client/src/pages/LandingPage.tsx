@@ -1,6 +1,6 @@
 import Footer from "@/components/Footer";
-import LandingHeading from "@/components/LandingHeading";
-import LandingNavbar from "@/components/LandingNavbar";
+import LandingHeading from "@/components/landing/LandingHeading";
+import LandingNavbar from "@/components/landing/LandingNavbar";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router";

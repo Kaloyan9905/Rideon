@@ -8,9 +8,9 @@ import { ThemeProvider } from "./components/theme/ThemeProvider.tsx";
 import ClientThemeWrapper from "./components/theme/ClientThemeWrapper.tsx";
 import SharedLayout from "./layouts/SharedLayout.tsx";
 import { ACCESS_TOKEN_CHECKING_INTERVAL } from "./shared/auth-constants.ts";
-import storageService from "./api/services/storage-service.ts";
-import authService from "./api/services/auth-service.ts";
-import { AuthResponseData } from "./api/types/auth.ts";
+import storageService from "./services/storage-service.ts";
+import authService from "./services/auth-service.ts";
+import { AuthResponseData } from "./types/auth.ts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();

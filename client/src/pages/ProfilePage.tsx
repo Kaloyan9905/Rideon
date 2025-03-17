@@ -1,8 +1,8 @@
-import profileService from "@/api/services/profile-service";
-import storageService from "@/api/services/storage-service";
-import { ProfileVM } from "@/api/types/profile";
+import profileService from "@/services/profile-service";
+import storageService from "@/services/storage-service";
+import { ProfileVM } from "@/types/profile";
 import Footer from "@/components/Footer";
-import { LoadingSpinner } from "@/components/loading/LoadingSpinner";
+import { LoadingSpinner } from "@/components/LoadingComponents";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ThemeSwitcher from "@/components/theme/ThemeSwitcher";
 import { zodResolver } from "@hookform/resolvers/zod";

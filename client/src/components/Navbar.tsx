@@ -1,8 +1,8 @@
 import { IdCard, LayoutDashboard, Menu, History, Cog } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
-import ThemeSwitcher from "../theme/ThemeSwitcher";
+import ThemeSwitcher from "./theme/ThemeSwitcher";
 import { useEffect, useRef, useState } from "react";
-import storageService from "@/api/services/storage-service";
+import storageService from "@/services/storage-service";
 
 const Navbar = () => {
   const navigate = useNavigate();
