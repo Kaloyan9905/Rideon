@@ -4,6 +4,7 @@ import profileService from "@/services/profile-service";
 import { CardVM } from "@/types/pass";
 import { Trash2, CalendarSync, X } from "lucide-react";
 import { motion } from "framer-motion";
+import { BASE_URL } from "@/services/base";
 
 interface QRCodeModalProps {
   isOpen: boolean;
@@ -175,7 +176,7 @@ const CardTab: React.FC = () => {
                         },
                       }}
                       className="rounded-2xl w-36 h-36 sm:w-44 sm:h-44 object-contain mx-auto shadow-lg bg-base-200 p-3"
-                      src={card.qr_code}
+                      src={`${BASE_URL}${card.qr_image}`}
                       alt="QR Code - Click to enlarge"
                     />
                     <div className="absolute inset-0 rounded-2xl bg-base-content/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -291,7 +292,7 @@ const CardTab: React.FC = () => {
           <QRCodeModal
             isOpen={showQRModal}
             onClose={() => setShowQRModal(false)}
-            qrCodeUrl={card.qr_code}
+            qrCodeUrl={`${BASE_URL}${card.qr_image}`}
           />
         </>
       ) : (

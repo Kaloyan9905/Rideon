@@ -4,7 +4,7 @@ interface BasePass {
   updated_at: string;
   expires_at: string;
   serial_number: string;
-  qr_code: string;
+  qr_image: string;
 }
 
 export interface CardVM extends BasePass {
