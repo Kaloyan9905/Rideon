@@ -13,7 +13,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['id', 'first_name', 'last_name',
                   'ucn', 'date_of_birth', 'phone_number',
-                  'is_superuser', 'card', 'tickets']
+                  'profile_image', 'is_superuser', 'card', 'tickets']
         read_only_fields = ['user']
 
     @staticmethod
