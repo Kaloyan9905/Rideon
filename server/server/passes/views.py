@@ -1,11 +1,10 @@
 from rest_framework import generics, status
-from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from server.passes.models import Card, Ticket
 from server.passes.serializers import CardSerializer, TicketSerializer
-from server.passes.utils import create_ticket_for_user
+from server.passes.services import CardService, TicketService
 
 
 class CardCreateAPIView(generics.CreateAPIView):
@@ -13,10 +12,15 @@ class CardCreateAPIView(generics.CreateAPIView):
     queryset = Card.objects.all()
     serializer_class = CardSerializer
 
+    def perform_create(self, serializer):
+        return CardService.create_card(
+            self.request.user.profile,
+            serializer.validated_data
+        )
+
 
 class DetailsCardAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = Card.objects.all()
     serializer_class = CardSerializer
 
     def get_queryset(self):
@@ -28,13 +32,12 @@ class UpdateCardAPIView(generics.UpdateAPIView):
     queryset = Card.objects.all()
     serializer_class = CardSerializer
 
-    def get_object(self):
-        obj = super().get_object()
-
-        if not obj.owner == self.request.user.profile and not obj.owner.profile.is_admin:
-            raise PermissionDenied('You do not have permission to edit this card.')
-
-        return obj
+    def perform_update(self, serializer):
+        return CardService.update_card(
+            self.request.user.profile,
+            self.get_object(),
+            serializer.validated_data
+        )
 
 
 class DeleteCardAPIView(generics.DestroyAPIView):
@@ -50,7 +53,7 @@ class PurchaseTicketAPIView(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         try:
-            ticket = create_ticket_for_user(self.request.user.profile)
+            ticket = TicketService.create_ticket(self.request.user.profile)
             serializer = self.get_serializer(ticket)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
