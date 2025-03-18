@@ -9,7 +9,7 @@ import { AxiosResponse } from "axios";
 
 interface userStatsDataProps {
   activeCard: boolean;
-  ticketsBought: number;
+  ticketsBought: number | undefined;
   balance: number;
 }
 
@@ -23,7 +23,7 @@ const DashboardPage = () => {
   ];
   const userStatsData: userStatsDataProps = {
     activeCard: profile?.card ? true : false,
-    ticketsBought: Math.floor(Math.random() * 20),
+    ticketsBought: profile?.tickets.length,
     balance: parseFloat((Math.random() * 50).toFixed(2)),
   };
 

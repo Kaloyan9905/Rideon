@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 
 type UserStatsProps = {
     activeCard: boolean;
-    ticketsBought: number;
+    ticketsBought: number | undefined;
     balance: number;
 };
 

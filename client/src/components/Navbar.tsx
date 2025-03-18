@@ -1,7 +1,7 @@
 import { IdCard, LayoutDashboard, Menu, History, Cog,LogOut } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import ThemeSwitcher from "./theme/ThemeSwitcher";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import storageService from "@/services/storage-service";
 import { ProfileVM } from "@/types/profile";
 import { AxiosResponse } from "axios";
@@ -10,21 +10,8 @@ import profileService from "@/services/profile-service";
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
-  const popoverRef = useRef<HTMLDivElement>(null);
-
-  const togglePopover = () => setIsPopoverOpen((prev) => !prev);
 
   const isActive = (path: string) => location.pathname === path;
-
-  function handleClickOutside(event: MouseEvent) {
-    if (
-      popoverRef.current &&
-      !popoverRef.current.contains(event.target as Node)
-    ) {
-      setIsPopoverOpen(false);
-    }
-  }
 
   const [profile, setProfile] = useState<ProfileVM | null>(null);
 
@@ -40,18 +27,6 @@ const Navbar = () => {
       console.log(error);
     }
   }, []);
-
-  useEffect(() => {
-    if (isPopoverOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isPopoverOpen]);
 
   return (
     <div className="p-4 flex flex-row justify-between">

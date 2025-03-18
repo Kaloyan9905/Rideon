@@ -6,6 +6,7 @@ import { ProfileVM } from "@/types/profile";
 import { AxiosResponse } from "axios";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
+import { BASE_URL } from "@/services/base";
 
 interface QRCodeModalProps {
   isOpen: boolean;
@@ -144,7 +145,7 @@ const TicketTab: React.FC = () => {
                         },
                       }}
                       className="rounded-2xl w-36 h-36 sm:w-44 sm:h-44 object-contain mx-auto shadow-lg bg-base-200 p-3"
-                      src={ticket.qr_code}
+                      src={`${BASE_URL}${ticket.qr_image}`}
                       alt="Ticket QR Code - Click to enlarge"
                     />
                     <div className="absolute inset-0 rounded-2xl bg-base-content/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -155,7 +156,8 @@ const TicketTab: React.FC = () => {
                   </motion.div>
                 </div>
                 <label className="font-montserrat">
-                  ({idx + 1}) Expires: {new Date(ticket.expires_at).toDateString()}
+                  ({idx + 1}) Expires:{" "}
+                  {new Date(ticket.expires_at).toDateString()}
                 </label>
               </div>
               <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
@@ -182,7 +184,9 @@ const TicketTab: React.FC = () => {
           setShowQRModal(false);
           setSelectedTicket(null);
         }}
-        qrCodeUrl={selectedTicket ? selectedTicket.qr_code : ""}
+        qrCodeUrl={
+          selectedTicket ? `${BASE_URL}${selectedTicket.qr_image}` : ""
+        }
       />
     </div>
   );
