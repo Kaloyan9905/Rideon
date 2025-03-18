@@ -13,6 +13,7 @@ import DashboardPage from "./pages/DashboardPage";
 import AuthGuard from "./components/AuthGuard";
 import PassesPage from "./pages/PassesPage";
 import ValidatorPage from "./pages/ValidatorPage";
+import HistoryPage from "./pages/HistoryPage";
 
 const App = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +33,10 @@ const App = createBrowserRouter(
       <Route
         path="/passes"
         element={<AuthGuard element={<PassesPage />} /*requireStaff*/ />}
+      />
+       <Route
+        path="/history"
+        element={<AuthGuard element={<HistoryPage />} requireStaff={false}/>}
       />
       <Route
         path="*"

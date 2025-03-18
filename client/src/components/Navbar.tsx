@@ -1,4 +1,4 @@
-import { IdCard, LayoutDashboard, Menu, History, Cog } from "lucide-react";
+import { IdCard, LayoutDashboard, Menu, History, Cog,LogOut } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import ThemeSwitcher from "./theme/ThemeSwitcher";
 import { useEffect, useRef, useState } from "react";
@@ -80,7 +80,7 @@ const Navbar = () => {
               <span className="text-primary">on</span>
             </div>
 
-            <ul className="font-montserrat flex flex-col gap-3 justify-center flex-grow ml-auto mr-auto text-xl">
+            <ul className="font-montserrat flex flex-col gap-3 justify-center flex-grow text-xl">
               <li
                 className={
                   isActive("/dashboard")
@@ -95,7 +95,13 @@ const Navbar = () => {
                   Dashboard
                 </Link>
               </li>
-              <li>
+              <li
+                className={
+                  isActive("/passes")
+                    ? "bg-gray-600 bg-opacity-35 rounded-md"
+                    : ""
+                }
+              >
                 <Link to="/passes">
                   <span className="text-accent">
                     <IdCard />
@@ -103,7 +109,13 @@ const Navbar = () => {
                   Tickets & Cards
                 </Link>
               </li>
-              <li>
+              <li
+                className={
+                  isActive("/history")
+                    ? "bg-gray-600 bg-opacity-35 rounded-md"
+                    : ""
+                }
+              >
                 <Link to="/history">
                   <span className="text-primary">
                     <History />
@@ -115,9 +127,18 @@ const Navbar = () => {
 
             <button
               className="btn btn-secondary font-montserrat font-bold"
-              onClick={() => navigate("/settings")}
+              onClick={() => navigate("/profile")}
             >
               <Cog /> Settings
+            </button>
+            <button
+              className="btn bg-red-700 hover:bg-red-800 mt-2 font-montserrat font-bold"
+              onClick={() => {
+                storageService.deleteUserData();
+                navigate("/");
+              }}
+            >
+              <LogOut /> Logout
             </button>
           </div>
         </div>
@@ -134,33 +155,10 @@ const Navbar = () => {
               }
               alt="Profile Picture"
               className="cursor-pointer"
-              onClick={togglePopover}
+              onClick={() => navigate("/profile")}
             />
           </div>
         </div>
-
-        {isPopoverOpen && (
-          <div
-            ref={popoverRef}
-            className="absolute font-montserrat font-semibold right-16 top-20 bg-base-100 p-3 shadow-xl rounded-lg z-50 flex flex-col gap-3"
-          >
-            <button
-              className="px-7 py-2 bg-primary rounded-lg text-black"
-              onClick={() => navigate("/profile")}
-            >
-              Profile
-            </button>
-            <button
-              className="px-7 py-2 bg-error rounded-lg text-black"
-              onClick={() => {
-                storageService.deleteUserData();
-                navigate("/");
-              }}
-            >
-              Logout
-            </button>
-          </div>
-        )}
 
         <ThemeSwitcher />
       </div>

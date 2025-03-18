@@ -20,10 +20,12 @@ const ValidatorPage = () => {
   return (
     <MaxWidthWrapper
       padding="0"
-      className="min-h-full flex flex-col justify gap-16"
+      className="min-h-screen flex flex-col gap-16"
     >
       <LandingNavbar handleGetStarted={handleGetStarted} />
-        <ValidatorBody/>
+      <div className="justify-center flex flex-col mt-24">
+        <ValidatorBody />
+      </div>
       <Footer />
     </MaxWidthWrapper>
   );
