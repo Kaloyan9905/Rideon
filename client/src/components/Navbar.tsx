@@ -127,7 +127,11 @@ const Navbar = () => {
         <div className="avatar">
           <div className="rounded-full w-12 h-12 ring-secondary ring">
             <img
-              src="https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg"
+              src={
+                profile?.profile_image
+                  ? profile!.profile_image
+                  : "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg"
+              }
               alt="Profile Picture"
               className="cursor-pointer"
               onClick={togglePopover}

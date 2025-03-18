@@ -1,7 +1,7 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import CardTab from "@/components/CardTab";
-import TicketTab from "@/components/TicketTab";
-import FaqTab from "@/components/FaqTab";
+import CardTab from "@/components/documents/CardTab";
+import TicketTab from "@/components/documents/TicketTab";
+import FaqTab from "@/components/documents/FaqTab";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import { useState } from "react";
 
