@@ -28,7 +28,7 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }} 
+        exit={{ scale: 0.9, opacity: 0 }}
         className="bg-white p-4 sm:p-8 rounded-2xl relative max-w-[90vw] w-full sm:w-auto"
       >
         <button
@@ -49,21 +49,25 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({
 };
 
 const CardTab: React.FC = () => {
-  const [expiresAt, setExpiresAt] = useState<string>("");
   const [card, setCard] = useState<CardVM | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showQRModal, setShowQRModal] = useState<boolean>(false);
+
+  const [durationType, setDurationType] = useState("daily");
+  const [dailyCount, setDailyCount] = useState(1);
+  const [monthlyCount, setMonthlyCount] = useState(1);
 
   const fetchCard = async () => {
     try {
       setError(null);
       const profileResponse = await profileService.makeGetProfileRequest();
       const userProfile = profileResponse.data;
-
       if (userProfile.card) {
         setCard(userProfile.card);
       }
+
+      console.log(card);
     } catch (error) {
       setError("Failed to load card information");
       console.error(error);
@@ -76,11 +80,22 @@ const CardTab: React.FC = () => {
     fetchCard();
   }, []);
 
+  const computeExpiresAt = () => {
+    const date = new Date();
+    if (durationType === "daily") {
+      date.setDate(date.getDate() + dailyCount);
+    } else {
+      date.setMonth(date.getMonth() + monthlyCount);
+    }
+    return date.toISOString();
+  };
+
   const handleCreatePass = async () => {
     try {
       setError(null);
       setLoading(true);
-      const res = await passesService.makeCreateCardRequest(expiresAt);
+      const expiration = computeExpiresAt();
+      const res = await passesService.makeCreateCardRequest(expiration);
       setCard(res.data);
     } catch (error) {
       setError("Failed to create card");
@@ -99,6 +114,8 @@ const CardTab: React.FC = () => {
     await passesService.makeDeleteCardRequest(card!.pk);
     setCard(null);
   };
+
+  const formattedExpiration = new Date(computeExpiresAt()).toLocaleDateString();
 
   if (loading) {
     return (
@@ -158,7 +175,7 @@ const CardTab: React.FC = () => {
                         },
                       }}
                       className="rounded-2xl w-36 h-36 sm:w-44 sm:h-44 object-contain mx-auto shadow-lg bg-base-200 p-3"
-                      src="https://randomqr.com/assets/images/rickroll-qrcode.webp"
+                      src={card.qr_code}
                       alt="QR Code - Click to enlarge"
                     />
                     <div className="absolute inset-0 rounded-2xl bg-base-content/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -200,14 +217,7 @@ const CardTab: React.FC = () => {
                           Expiration Date
                         </span>
                         <span className="font-medium text-base sm:text-lg">
-                          {new Date(card.expires_at).toLocaleDateString(
-                            "en-US",
-                            {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            }
-                          )}
+                          {new Date(card.expires_at).toDateString()}
                         </span>
                       </h2>
                     </div>
@@ -225,10 +235,7 @@ const CardTab: React.FC = () => {
                       className="p-3 bg-info/10 hover:bg-info/20 rounded-xl transition-colors"
                       aria-label="Update card"
                     >
-                      <CalendarSync
-                        onClick={() => {}}
-                        className="w-5 h-5 sm:w-6 sm:h-6 text-info"
-                      />
+                      <CalendarSync className="w-5 h-5 sm:w-6 sm:h-6 text-info" />
                     </motion.button>
                     <motion.button
                       whileHover={{ scale: 1.05 }}
@@ -284,34 +291,82 @@ const CardTab: React.FC = () => {
           <QRCodeModal
             isOpen={showQRModal}
             onClose={() => setShowQRModal(false)}
-            qrCodeUrl="https://randomqr.com/assets/images/rickroll-qrcode.webp"
+            qrCodeUrl={card.qr_code}
           />
         </>
       ) : (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="shadow-xl flex flex-col items-center gap-4 w-full  p-6 rounded-2xl bg-base-200/50 backdrop-blur-sm border border-gray-500/50 "
+          className="shadow-xl flex flex-col items-center gap-4 w-full p-6 rounded-2xl bg-base-200/50 backdrop-blur-sm border border-gray-500/50"
         >
           <h3 className="text-3xl font-bold text-center decoration-secondary mb-6">
             Create New Card
           </h3>
           <div className="flex flex-col gap-2 w-full font-montserrat">
-            <label>Expiration Date:</label>
-            <input
-              type="date"
-              value={expiresAt}
-              onChange={(e) => setExpiresAt(e.target.value)}
-              className="w-full px-4 py-3 border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base bg-base-100 [&::-webkit-datetime-edit-text]:text-base-content/50 [&::-webkit-datetime-edit]:text-base-content/50 before:content-[attr(data-placeholder)] before:text-base-content/50 [&:focus]:before:content-none [&:not([value=''])]:before:content-none"
-              aria-label="Expiration date"
-            />
+            <label>Duration:</label>
+            <div className="flex flex-row gap-3 items-center">
+              <select
+                value={durationType}
+                onChange={(e) => setDurationType(e.target.value)}
+                className="text-sm lg:text-base w-full lg:p-2 p-1 border border-primary rounded-md focus:outline-none focus:border-blue-700 transition duration-200"
+              >
+                <option value="daily">Days</option>
+                <option value="monthly">Months</option>
+              </select>
+              {durationType === "daily" ? (
+                <div className="flex items-center justify-center space-x-2">
+                  <button
+                    type="button"
+                    className="btn btn-secondary lg:px-7 lg:text-lg text-sm"
+                    onClick={() => setDailyCount(Math.max(dailyCount - 1, 1))}
+                  >
+                    -
+                  </button>
+                  <span className="lg:text-2xl text-sm">{dailyCount}</span>
+                  <button
+                    type="button"
+                    className="btn btn-secondary lg:px-7 lg:text-lg text-sm"
+                    onClick={() => setDailyCount(Math.min(dailyCount + 1, 5))}
+                  >
+                    +
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center space-x-2">
+                  <button
+                    type="button"
+                    className="btn btn-secondary lg:px-7 lg:text-lg text-sm"
+                    onClick={() =>
+                      setMonthlyCount(Math.max(monthlyCount - 1, 1))
+                    }
+                  >
+                    -
+                  </button>
+                  <span className="lg:text-2xl text-sm">{monthlyCount}</span>
+                  <button
+                    type="button"
+                    className="btn btn-secondary lg:px-7 lg:text-lg text-sm"
+                    onClick={() =>
+                      setMonthlyCount(Math.min(monthlyCount + 1, 3))
+                    }
+                  >
+                    +
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="mt-4 text-center">
+            <p className="text-base">
+              Card will expire on: <strong>{formattedExpiration}</strong>
+            </p>
           </div>
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="btn btn-primary font-montserrat text-sm sm:text-md w-full"
+            className="btn btn-primary font-montserrat text-sm sm:text-md w-full mt-4"
             onClick={handleCreatePass}
-            disabled={!expiresAt}
           >
             Create Card
           </motion.button>

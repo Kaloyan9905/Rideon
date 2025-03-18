@@ -13,7 +13,14 @@ class PassesService extends WebApiService {
     );
   }
 
-  public async makeCreateTicketRequest() {}
+  public async makeBuyTicketRequest() {
+    console.log(this.generateHeader());
+    return await axios.post(
+      `${this.PASSES_URL}/purchase-ticket/`,
+      {},
+      this.generateHeader()
+    );
+  }
 
   public async makeUpdateCardRequest(id: number, expires_at: string) {
     return await axios.put(

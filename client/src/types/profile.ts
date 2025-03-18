@@ -11,7 +11,7 @@ export interface ProfileVM {
   status: string;
   document?: string | null;
   card?: CardVM | null;
-  tickets?: TicketVM[] | null;
+  tickets: TicketVM[];
   balance?: number | null;
 }
 
