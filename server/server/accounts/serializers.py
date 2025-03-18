@@ -7,10 +7,13 @@ from server.passes.serializers import CardSerializer, TicketSerializer
 class UserProfileSerializer(serializers.ModelSerializer):
     card = serializers.SerializerMethodField()
     tickets = serializers.SerializerMethodField()
+    is_superuser = serializers.BooleanField(source='user.is_superuser', read_only=True)
 
     class Meta:
         model = UserProfile
-        fields = ['id', 'first_name', 'last_name', 'ucn', 'date_of_birth', 'phone_number', 'card', 'tickets']
+        fields = ['id', 'first_name', 'last_name',
+                  'ucn', 'date_of_birth', 'phone_number',
+                  'is_superuser', 'card', 'tickets']
         read_only_fields = ['user']
 
     @staticmethod
