@@ -1,24 +1,25 @@
 from rest_framework import serializers
+
+from server.passes.mixins import QRCodeMixin
 from server.passes.models import Ticket, Card
-from server.validator.serializers import QRCodeSerializer
 
 
-class TicketSerializer(serializers.ModelSerializer):
-    qr_code = QRCodeSerializer()
+class TicketSerializer(serializers.ModelSerializer, QRCodeMixin):
+    qr_image = serializers.SerializerMethodField()
 
     class Meta:
         model = Ticket
-        fields = ['pk', 'serial_number', 'owner', 'expires_at', 'qr_code']
-        read_only_fields = ['owner', 'qr_code']
+        fields = ['pk', 'serial_number', 'owner', 'expires_at', 'qr_image']
+        read_only_fields = ['owner']
 
 
-class CardSerializer(serializers.ModelSerializer):
-    qr_code = QRCodeSerializer()
+class CardSerializer(serializers.ModelSerializer, QRCodeMixin):
+    qr_image = serializers.SerializerMethodField()
 
     class Meta:
         model = Card
-        fields = ['pk', 'serial_number', 'owner', 'expires_at', 'qr_code']
-        read_only_fields = ['owner', 'qr_code']
+        fields = ['pk', 'serial_number', 'owner', 'expires_at', 'qr_image']
+        read_only_fields = ['owner']
 
     def create(self, validated_data):
         validated_data['owner'] = self.context['request'].user.profile
