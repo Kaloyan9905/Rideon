@@ -31,8 +31,8 @@ class UpdateCardAPIView(generics.UpdateAPIView):
     def get_object(self):
         obj = super().get_object()
 
-        if not obj.owner == self.request.user.profile:
-            raise PermissionDenied("You do not have permission to edit this card.")
+        if not obj.owner == self.request.user.profile and not obj.owner.profile.is_admin:
+            raise PermissionDenied('You do not have permission to edit this card.')
 
         return obj
 

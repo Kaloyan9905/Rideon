@@ -4,6 +4,8 @@ from server.validator.serializers import QRCodeSerializer
 
 
 class TicketSerializer(serializers.ModelSerializer):
+    qr_code = QRCodeSerializer()
+
     class Meta:
         model = Ticket
         fields = ['pk', 'serial_number', 'owner', 'expires_at', 'qr_code']
@@ -11,6 +13,8 @@ class TicketSerializer(serializers.ModelSerializer):
 
 
 class CardSerializer(serializers.ModelSerializer):
+    qr_code = QRCodeSerializer()
+
     class Meta:
         model = Card
         fields = ['pk', 'serial_number', 'owner', 'expires_at', 'qr_code']

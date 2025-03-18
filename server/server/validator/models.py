@@ -10,7 +10,7 @@ class QRCode(models.Model):
     def generate_qr_code(self, serial_number, expires_at):
         qr_data = {
             'serial_number': serial_number,
-            'expires_at': expires_at.isoformat() if expires_at else None
+            'expires_at': expires_at,
         }
 
         qr = qrcode.make(str(qr_data))
