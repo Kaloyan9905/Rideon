@@ -26,6 +26,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "unfold",
+    "unfold.contrib.filters",
+    "unfold.contrib.forms",
     'django.contrib.admin',
 
     'server.authentication',
@@ -37,6 +40,25 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
 ]
+
+UNFOLD = {
+    "SITE_TITLE": "RideOn Admin",
+    "SITE_HEADER": "RideOn Admin",
+    "COLORS": {
+        "primary": {
+            "50": "#f0f9ff",
+            "600": "#0284c7",
+        },
+    },
+    "EXTENSIONS": {
+        "modeltranslation": {
+            "flags": {
+                "en": "🇬🇧",
+                "bg": "🇧🇬",
+            },
+        },
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
