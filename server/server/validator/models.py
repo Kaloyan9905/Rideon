@@ -1,5 +1,6 @@
 import io
 import qrcode
+import json
 from django.core.files.base import ContentFile
 from django.db import models
 
@@ -10,10 +11,12 @@ class QRCode(models.Model):
     def generate_qr_code(self, serial_number, expires_at):
         qr_data = {
             'serial_number': serial_number,
-            'expires_at': expires_at,
+            'expires_at': expires_at.isoformat()
         }
 
-        qr = qrcode.make(str(qr_data))
+        qr_data_json = json.dumps(qr_data)
+
+        qr = qrcode.make(qr_data_json)
         qr_bytes = io.BytesIO()
         qr.save(qr_bytes, format='PNG')
 
