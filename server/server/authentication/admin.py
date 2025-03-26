@@ -1,9 +1,15 @@
 from django.contrib import admin
-from .models import AuthUser
+from unfold.admin import ModelAdmin
+
+from server.authentication.models import AuthUser
 
 
 @admin.register(AuthUser)
-class AuthUserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'is_active', 'is_staff')
-    search_fields = ('email',)
-    list_filter = ('is_active', 'is_staff')
+class AuthUserAdmin(ModelAdmin):
+    list_display = ("email", "is_active", "is_staff")
+    search_fields = ("email",)
+    list_filter = ("is_active", "is_staff")
+    fieldsets = (
+        (None, {"fields": ("email", "password")}),
+        ("Permissions", {"fields": ("is_active", "is_staff", "groups")}),
+    )
