@@ -36,14 +36,14 @@ class TicketValidator(PassValidator):
 
     def validate(self):
         if self.pass_instance.is_used:
-            return {'message': 'Ticket Used', 'status': 200}
+            return {'is_valid': False, 'reason': 'Ticket Used'}
 
         self.pass_instance.use()
 
         if self.is_expired():
-            return {'message': 'Ticket Expired', 'status': 200}
+            return {'is_valid': False, 'reason': 'Ticket Expired'}
 
-        return {'message': 'Valid Ticket', 'status': 200}
+        return {'is_valid': True, 'reason': 'Valid Ticket'}
 
 
 class CardValidator(PassValidator):
@@ -52,7 +52,7 @@ class CardValidator(PassValidator):
 
     def validate(self):
         if self.is_expired():
-            return {'message': 'Card Expired', 'status': 200}
+            return {'is_valid': False, 'reason': 'Card Expired'}
 
         self.pass_instance.use()
-        return {'message': 'Valid Card', 'status': 200}
+        return {'is_valid': True, 'reason': 'Valid Card'}
