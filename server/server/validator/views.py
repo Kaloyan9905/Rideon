@@ -1,39 +1,30 @@
-import json
-
-from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework import generics, status
-
-from server.validator.scanner import QRScanner
-from server.validator.exceptions import GrabFrameException, FailedToValidatePassException
 from server.validator.services import PassValidator
-
-NO_QR_CODE_FOUND = 'There was no QR code detected'
+from server.validator.exceptions import FailedToValidatePassException
 
 
 class ScanQRCodeAPIView(generics.GenericAPIView):
-    # permission_classes = [IsAdminUser]
-
-    def get(self, request, *args, **kwargs):
-        qr_scanner = QRScanner()
-
+    def post(self, request, *args, **kwargs):
         try:
-            qr_data = qr_scanner.scan()
+            qr_data = request.data
 
-            if qr_data is not None:
-                decoded_data = json.loads(qr_data)
-                serial_number = decoded_data['serial_number']
+            if 'serial_number' not in qr_data:
+                return Response({'error': 'Missing serial_number'}, status=status.HTTP_400_BAD_REQUEST)
 
+            serial_number = qr_data['serial_number']
+
+            try:
                 validator = PassValidator.get_validator(serial_number)
                 result = validator.validate()
 
-                return Response({'message': result['message']}, status=result['status'])
+                if result['is_valid']:
+                    return Response({'message': result['reason']}, status=status.HTTP_200_OK)
 
-        except GrabFrameException as exception:
-            return Response({'message': str(exception)}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response({'message': result['reason']}, status=status.HTTP_400_BAD_REQUEST)
 
-        except FailedToValidatePassException:
-            return Response({'message': NO_QR_CODE_FOUND}, status.HTTP_404_NOT_FOUND)
+            except FailedToValidatePassException as e:
+                return Response({'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
 
-        finally:
-            qr_scanner.release()
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
