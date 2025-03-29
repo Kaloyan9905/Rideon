@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import jsQR from "jsqr";
+import validatorService from "@/services/validator-service";
 
 const ValidatorBody = () => {
   const [scanResult, setScanResult] = useState<string | null>(null);
@@ -7,7 +8,7 @@ const ValidatorBody = () => {
   const [message, setMessage] = useState("Initializing scanner...");
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  let scanning = true;
+  const scanning = useRef(true);
 
   useEffect(() => {
     const startCamera = async () => {
@@ -26,6 +27,18 @@ const ValidatorBody = () => {
     startCamera();
   }, []);
 
+  const validateTicket = async (serial: string) => {
+    setMessage("Validating pass...");
+    try {
+      const result = await validatorService.validate(serial);
+      setStatus(result.is_valid ? "valid" : "invalid");
+      setMessage(result.is_valid ? `✔ ${result.reason}` : `✘ ${result.reason}`);
+    } catch (err) {
+      setStatus("invalid");
+      setMessage("✘ Validation failed");
+    }
+  };
+
   useEffect(() => {
     const scanQRCode = () => {
       if (!videoRef.current || !canvasRef.current) return;
@@ -40,12 +53,10 @@ const ValidatorBody = () => {
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const code = jsQR(imageData.data, imageData.width, imageData.height);
 
-      if (code && scanning) {
-        scanning = false;
+      if (code && scanning.current) {
+        scanning.current = false;
         setScanResult(code.data);
-        const isValid = code.data.includes("VALID");
-        setStatus(isValid ? "valid" : "invalid");
-        setMessage(isValid ? "✔ Ticket is valid" : "✘ Ticket is invalid");
+        validateTicket(code.data);
       } else {
         requestAnimationFrame(scanQRCode);
       }
