@@ -5,9 +5,10 @@ import { WebApiService } from "./web-api-service";
 class ValidatorService extends WebApiService {
   async validate(serial_number: string): Promise<{ is_valid: boolean; reason: string }> {
     try {
-      const response = await axios.post(`${BASE_URL}/validate/`, {
+      const response = await axios.post(`${BASE_URL}/validator/validate/`, {
         serial_number,
-      });
+      }, this.generateHeader());
+
 
       return response.data;
     } catch (error: any) {
