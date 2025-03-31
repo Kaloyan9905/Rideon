@@ -4,7 +4,7 @@ from server.validator.services import PassValidator
 from server.validator.exceptions import FailedToValidatePassException
 
 
-class ScanQRCodeAPIView(generics.GenericAPIView):
+class ValidateQRCodeAPIView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         try:
             qr_data = request.data
