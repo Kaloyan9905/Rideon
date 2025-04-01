@@ -1,88 +1,130 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import jsQR from "jsqr";
 import validatorService from "@/services/validator-service";
 
 const ValidatorBody = () => {
-  const [scanResult, setScanResult] = useState<string | null>(null);
-  const [status, setStatus] = useState<"pending" | "valid" | "invalid" | null>("pending");
-  const [message, setMessage] = useState("Initializing scanner...");
+  const [status, setStatus] = useState<"valid" | "invalid" | null>(null);
+  const [message, setMessage] = useState("Click to start scanning");
+  const [isCameraOn, setIsCameraOn] = useState(false);
+  const [testing, setTesting] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const scanning = useRef(true);
+  const streamRef = useRef<MediaStream | null>(null);
+  const scanning = useRef(false);
 
-  useEffect(() => {
-    const startCamera = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play();
-        }
-        setMessage("Waiting for QR code...");
-      } catch (error) {
-        setMessage("Camera access denied. Please enable permissions.");
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" } },
+        audio: false,
+      });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
       }
-    };
+      streamRef.current = stream;
+      scanning.current = true;
+      setIsCameraOn(true);
+      setMessage("Waiting for QR code...");
+      requestAnimationFrame(scanQRCode);
+    } catch (err) {
+      setMessage("Camera access denied. Please enable permissions.");
+    }
+  };
 
-    startCamera();
-  }, []);
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.srcObject = null;
+    }
+    scanning.current = false;
+    setIsCameraOn(false);
+    setMessage("Camera stopped");
+  };
+
+  const toggleCamera = () => {
+    isCameraOn ? stopCamera() : startCamera();
+  };
+
+  const scanQRCode = () => {
+    if (!videoRef.current || !canvasRef.current || !scanning.current) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    if (!ctx || !videoRef.current.videoWidth) return;
+
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+    if (code) {
+      const parsed = JSON.parse(code.data);
+      if (parsed.serial_number) {
+        scanning.current = false;
+        validateTicket(parsed.serial_number);
+      }
+    } else {
+      requestAnimationFrame(scanQRCode);
+    }
+  };
 
   const validateTicket = async (serial: string) => {
     setMessage("Validating pass...");
     try {
       const result = await validatorService.validate(serial);
       setStatus(result.is_valid ? "valid" : "invalid");
-      setMessage(result.is_valid ? `✔ ${result.reason}` : `✘ ${result.reason}`);
+      setMessage(result.is_valid ? "✔ Valid Ticket" : "✘ Invalid Ticket");
+      setTimeout(() => {
+        setStatus(null);
+        setMessage("Waiting for QR code...");
+        scanning.current = true;
+        requestAnimationFrame(scanQRCode);
+      }, 1000);
     } catch (err) {
       setStatus("invalid");
       setMessage("✘ Validation failed");
+      setTimeout(() => {
+        setStatus(null);
+        setMessage("Waiting for QR code...");
+        scanning.current = true;
+        requestAnimationFrame(scanQRCode);
+      }, 1000);
     }
   };
-
-  useEffect(() => {
-    const scanQRCode = () => {
-      if (!videoRef.current || !canvasRef.current) return;
-
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
-      if (!ctx || !videoRef.current.videoWidth) return;
-
-      canvas.width = videoRef.current.videoWidth;
-      canvas.height = videoRef.current.videoHeight;
-      ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const code = jsQR(imageData.data, imageData.width, imageData.height);
-
-      if (code && scanning.current) {
-        scanning.current = false;
-        setScanResult(code.data);
-        validateTicket(code.data);
-      } else {
-        requestAnimationFrame(scanQRCode);
-      }
-    };
-
-    requestAnimationFrame(scanQRCode);
-  }, [scanResult]);
 
   return (
     <div className="flex flex-col items-center justify-center p-6">
       <h1 className="text-4xl font-bold text-primary mb-6">Ticket Validator</h1>
       <p className="text-lg text-gray-600 mb-4">{message}</p>
+
+      <button
+        onClick={toggleCamera}
+        className="mb-4 px-6 py-2 rounded-full bg-primary text-white hover:bg-primary-dark transition"
+      >
+        {isCameraOn ? "Stop Camera" : "Start Camera"}
+      </button>
+
       <div className="relative rounded-2xl p-6 w-full max-w-lg flex flex-col items-center">
-        <video ref={videoRef} className="w-96 h-96 border-4 border-primary rounded-lg" />
+        <video ref={videoRef} className="w-96 h-96 border-4 border-primary rounded-lg" playsInline muted />
         <canvas ref={canvasRef} className="hidden" />
       </div>
-      {scanResult && (
-        <div className={`mt-6  shadow-lg rounded-2xl p-6 w-full max-w-xl flex flex-col items-center text-center border-l-8 ${status === "valid" ? "border-green-500" : "border-red-500"}`}>
-          <p className="text-lg font-semibold text-gray-700">
-            Scanned Code: <span className="text-indigo-600 font-bold">{scanResult}</span>
-          </p>
-          {status === "valid" ? (
-            <p className="text-green-600 text-xl font-bold mt-3">✔ Valid Ticket</p>
-          ) : (
-            <p className="text-red-600 text-xl font-bold mt-3">✘ Invalid Ticket</p>
-          )}
+      {testing}
+      {status && (
+        <div className={`fixed inset-0  ${
+              status === "valid" ? "bg-green-600/80" : "bg-red-600/80"
+            } z-50 flex items-center justify-center`}>
+          <div
+            className={`text-white text-4xl font-bold px-12 h-100 w-100 py-6`}
+          >
+            {status === "valid" ? "✔ Valid Ticket" : "✘ Invalid Ticket"}
+          </div>
         </div>
       )}
     </div>
