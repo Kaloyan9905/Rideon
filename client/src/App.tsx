@@ -19,7 +19,6 @@ const App = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route index path="/" element={<LandingPage />} />
-      <Route index path="/validator" element={<ValidatorPage />} />
       <Route path="/sign-up" element={<SignUpPage />} />
       <Route path="/sign-in" element={<SignInPage />} />
       <Route
@@ -34,9 +33,13 @@ const App = createBrowserRouter(
         path="/passes"
         element={<AuthGuard element={<PassesPage />} /*requireStaff*/ />}
       />
-       <Route
+      <Route
         path="/history"
-        element={<AuthGuard element={<HistoryPage />} requireStaff={false}/>}
+        element={<AuthGuard element={<HistoryPage />} requireStaff={false} />}
+      />
+      <Route
+        path="/validator"
+        element={<AuthGuard element={<ValidatorPage />} requireAdmin={true} />}
       />
       <Route
         path="*"

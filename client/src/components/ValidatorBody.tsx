@@ -83,7 +83,7 @@ const ValidatorBody = () => {
     try {
       const result = await validatorService.validate(serial);
       setStatus(result.is_valid ? "valid" : "invalid");
-      setMessage(result.is_valid ? "✔ Valid Ticket" : "✘ Invalid Ticket");
+      setMessage(result.is_valid ? "✔ Valid Ticket" : "✘ Invalid Ticket"); 
       setTimeout(() => {
         setStatus(null);
         setMessage("Waiting for QR code...");
