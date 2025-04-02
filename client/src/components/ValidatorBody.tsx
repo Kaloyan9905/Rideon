@@ -6,7 +6,6 @@ const ValidatorBody = () => {
   const [status, setStatus] = useState<"valid" | "invalid" | null>(null);
   const [message, setMessage] = useState("Click to start scanning");
   const [isCameraOn, setIsCameraOn] = useState(false);
-  const [testing, setTesting] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -62,18 +61,22 @@ const ValidatorBody = () => {
     ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const code = jsQR(imageData.data, imageData.width, imageData.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height) as { data: string } | null;
 
-    if (code) {
-      const parsed = JSON.parse(code.data);
-      if (parsed.serial_number) {
-        scanning.current = false;
-        validateTicket(parsed.serial_number);
+    if (code && code.data) {
+      try {
+        const parsed = JSON.parse(code.data);
+        if (parsed.serial_number) {
+          scanning.current = false;
+          validateTicket(parsed.serial_number);
+        }
+      } catch (err) {
+        console.error("Invalid JSON from QR code:", err);
       }
     } else {
       requestAnimationFrame(scanQRCode);
     }
-  };
+      };
 
   const validateTicket = async (serial: string) => {
     setMessage("Validating pass...");
@@ -115,7 +118,6 @@ const ValidatorBody = () => {
         <video ref={videoRef} className="w-96 h-96 border-4 border-primary rounded-lg" playsInline muted />
         <canvas ref={canvasRef} className="hidden" />
       </div>
-      {testing}
       {status && (
         <div className={`fixed inset-0  ${
               status === "valid" ? "bg-green-600/80" : "bg-red-600/80"
