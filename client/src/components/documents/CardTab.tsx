@@ -98,6 +98,7 @@ const CardTab: React.FC = () => {
       const expiration = computeExpiresAt();
       const res = await passesService.makeCreateCardRequest(expiration);
       setCard(res.data);
+      window.location.reload();
     } catch (error) {
       setError("Failed to create card");
       console.error(error);
