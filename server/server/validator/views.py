@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import generics, status
 from server.validator.services import PassValidator
@@ -7,7 +7,7 @@ from server.validator.serializers import QRDataSerializer
 
 
 class ValidateQRCodeAPIView(generics.GenericAPIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser, IsAuthenticated]
     serializer_class = QRDataSerializer
 
     @staticmethod
