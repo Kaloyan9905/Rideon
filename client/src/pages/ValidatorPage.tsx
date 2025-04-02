@@ -4,7 +4,7 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ValidatorBody from "@/components/ValidatorBody";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router";
-
+ 
 const ValidatorPage = () => {
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
