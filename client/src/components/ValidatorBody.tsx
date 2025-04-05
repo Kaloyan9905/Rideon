@@ -5,8 +5,8 @@ import validatorService from "@/services/validator-service";
 const ValidatorBody = () => {
   const [status, setStatus] = useState<"valid" | "invalid" | null>(null);
   const [message, setMessage] = useState("Click to start scanning");
+  const [pullReqMessage,setPullReqMessage] = useState("Click to start scanning");
   const [isCameraOn, setIsCameraOn] = useState(false);
-  const [testing, setTesting] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -62,15 +62,21 @@ const ValidatorBody = () => {
     ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const code = jsQR(imageData.data, imageData.width, imageData.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height) as { data: string } | null;
 
-    if (code) {
-      const parsed = JSON.parse(code.data);
-      if (parsed.serial_number) {
+    if (code && code.data) {
+      try {
+        const parsed = JSON.parse(code.data);
+        const serial = parsed.serial_number || code.data;
         scanning.current = false;
-        validateTicket(parsed.serial_number);
+        validateTicket(serial);
+      } catch (err) {
+        console.error("Invalid JSON from QR code:", err);
+        scanning.current = false;
+        validateTicket(code.data);
       }
-    } else {
+    } 
+    else {
       requestAnimationFrame(scanQRCode);
     }
   };
@@ -80,7 +86,8 @@ const ValidatorBody = () => {
     try {
       const result = await validatorService.validate(serial);
       setStatus(result.is_valid ? "valid" : "invalid");
-      setMessage(result.is_valid ? "✔ Valid Ticket" : "✘ Invalid Ticket");
+      setMessage(result.is_valid ? "✔ Valid Ticket" : "✘ Invalid Ticket"); 
+      setPullReqMessage(result.is_valid ? " " : result.message); 
       setTimeout(() => {
         setStatus(null);
         setMessage("Waiting for QR code...");
@@ -115,7 +122,6 @@ const ValidatorBody = () => {
         <video ref={videoRef} className="w-96 h-96 border-4 border-primary rounded-lg" playsInline muted />
         <canvas ref={canvasRef} className="hidden" />
       </div>
-      {testing}
       {status && (
         <div className={`fixed inset-0  ${
               status === "valid" ? "bg-green-600/80" : "bg-red-600/80"
@@ -123,7 +129,12 @@ const ValidatorBody = () => {
           <div
             className={`text-white text-4xl font-bold px-12 h-100 w-100 py-6`}
           >
-            {status === "valid" ? "✔ Valid Ticket" : "✘ Invalid Ticket"}
+            {status === "valid" ? "✔ Valid Ticket" : "✘ Invalid Ticket"}<br/>
+            {status === "invalid" && (
+              <div className="text-lg text-white mt-4">
+                {pullReqMessage}
+              </div>
+            )}
           </div>
         </div>
       )}
