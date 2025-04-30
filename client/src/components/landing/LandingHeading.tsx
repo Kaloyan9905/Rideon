@@ -1,59 +1,106 @@
+import { motion } from "framer-motion";
 import TypewriterComponent from "typewriter-effect";
 import ContactForm from "./ContactForm";
 import AboutSection from "./AboutSection";
 
+const fadeInUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+};
+
 const LandingHeading = () => {
   return (
-    <div className="mt-44 flex flex-col gap-7">
-      <main className="flex lg:flex-row flex-col gap-16 justify-center items-center">
-        <div className="flex flex-col gap-5 items-center">
-          <h1 className="xl:text-4xl lg:text-3xl sm:text-3xl text-lg font-montserrat">
-            Innovative ticket management system!
-          </h1>
-
-          <div className="xl:text-3xl sm:text-2xl text-md text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-pink-300">
-            <TypewriterComponent
-              options={{
-                strings: [
-                  "Manage your tickets with ease.",
-                  "Load your public transport card easily.",
-                  "Accessible to everyone.",
-                  "Easy to use and understand.",
-                  "Fast and reliable.",
-                  "In-built ticket validation system.",
-                ],
-                autoStart: true,
-                loop: true,
-              }}
-            />
-          </div>
-        </div>
-        <div className="relative group cursor-grabbing">
-          <img
-            src="/landing-img.jpg"
-            className="lg:w-80 lg:h-72 sm:w-64 sm:h-56 w-40 h-36 rounded-3xl opacity-40 blur-sm transform group-hover:scale-105 transition-all duration-500 ease-in-out"
-            alt="Large Background Image"
-          />
-          <img
-            src="/landing-img.jpg"
-            className="absolute top-1/2 left-1/2 lg:w-72 lg:h-64 sm:w-52 sm:h-48 w-36 h-32 rounded-3xl shadow-lg transform -translate-x-1/2 -translate-y-1/2 scale-100 group-hover:scale-110 group-hover:rotate-2 transition-transform duration-500 ease-in-out"
-            alt="Small Foreground Image"
-          />
-        </div>
-      </main>
-
-      <div className="relative w-full flex flex-col items-center">
-        <div className="w-1 h-36 bg-gradient-to-b from-transparent to-primary opacity-65"></div>
+    <section className="relative flex flex-col gap-0 overflow-hidden">
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-pink-300 opacity-20 rounded-full blur-3xl" />
+        <div className="absolute bottom-[-10%] right-[-5%] w-[400px] h-[400px] bg-blue-300 opacity-20 rounded-full blur-3xl" />
       </div>
+      <div className="relative">
+        <motion.div
+          className="flex flex-col lg:flex-row items-center justify-between gap-16 px-6 sm:px-10 max-w-7xl mx-auto pt-32 pb-52 relative z-1"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeInUp}
+        >
+          <div className="flex-1 text-center lg:text-left space-y-6 order-1">
+            <h1 className="text-4xl sm:text-5xl font-chewy font-bold  leading-tight">
+              Innovative ticket management system!
+            </h1>
+            <div className="text-2xl sm:text-3xl font-medium bg-gradient-to-r from-blue-500 to-pink-400 bg-clip-text text-transparent">
+              <TypewriterComponent
+                options={{
+                  strings: [
+                    "Manage your tickets with ease.",
+                    "Reload your travel card in seconds.",
+                    "Accessible, reliable, secure.",
+                    "Designed for everyone.",
+                    "Validate and store tickets instantly.",
+                  ],
+                  autoStart: true,
+                  loop: true,
+                }}
+              />
+            </div>
+          </div>
 
+          <div className="flex-1 flex items-center justify-center order-2 ">
+            <div className="relative w-64 h-[540px] rounded-3xl bg-black border-[12px] border-gray-900 shadow-2xl overflow-hidden">
+              <video
+                className="absolute top-0 left-0 w-full h-full object-cover"
+                src="/header-phone-bg.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            </div>
+          </div>
+        </motion.div>
+        <svg
+          className="absolute bottom-0 left-0 w-[100vw] h-96 -z-0"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+        >
+          <svg
+            className="absolute bottom-0 left-0 w-full h-full"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 1440 320"
+            preserveAspectRatio="none"
+          >
+            <defs>
+              <linearGradient id="waveGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#f9fafb" stop-opacity="0.3" />
+                <stop offset="100%" stop-color="#f9fafb" stop-opacity="1" />
+              </linearGradient>
+            </defs>
+
+            <path
+              d="M0,64L80,96C160,128,320,192,480,202.7C640,213,800,171,960,138.7C1120,107,1280,85,1360,74.7L1440,64"
+              fill="none"
+              stroke="#d1d5db"
+              stroke-width="2"
+            />
+
+            <path
+              fill="url(#waveGradient)"
+              d="M0,64L80,96C160,128,320,192,480,202.7C640,213,800,171,960,138.7C1120,107,1280,85,1360,74.7L1440,64V320H0Z"
+            />
+          </svg>
+        </svg>
+      </div>
       <AboutSection />
 
-      <div className="relative w-full flex flex-col items-center">
-        <div className="w-1 h-36 bg-gradient-to-b from-transparent to-primary opacity-65"></div>
-      </div>
-
-      <ContactForm />
-    </div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={fadeInUp}
+      >
+        <ContactForm />
+      </motion.div>
+    </section>
   );
 };
 

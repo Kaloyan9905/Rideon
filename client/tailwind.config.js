@@ -7,6 +7,7 @@ export default {
     extend: {
       fontFamily: {
         montserrat: ["Montserrat", "sans-serif"],
+        chewy: ['"Chewy"', 'cursive'],
       },
     },
   },
