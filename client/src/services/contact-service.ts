@@ -18,7 +18,13 @@ class ContactService extends WebApiService {
         if (email !== undefined) formData.append("email", email);
         if (content !== undefined) formData.append("content", content);
 
-        return await axios.post(`${this.CONTACT_URL}/`, formData, this.generateHeader());
+        return await axios.post(`${this.CONTACT_URL}/`, {
+            first_name: first_name,
+            last_name: last_name,
+            email: email,
+            message: content,
+        });
+
     }
 
 }
