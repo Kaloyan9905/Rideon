@@ -1,3 +1,5 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -6,6 +8,7 @@ from .serializers import ContactFormSerializer
 from .utils import send_email
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class ContactFormView(APIView):
     permission_classes = [AllowAny]
 
