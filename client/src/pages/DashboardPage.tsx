@@ -24,7 +24,7 @@ const DashboardPage = () => {
   const userStatsData: userStatsDataProps = {
     activeCard: profile?.card ? true : false,
     ticketsBought: profile?.tickets.length,
-    balance: parseFloat((Math.random() * 50).toFixed(2)),
+    balance: profile?.balance||0,
   };
 
   useEffect(() => {
