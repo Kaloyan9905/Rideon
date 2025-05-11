@@ -1,4 +1,4 @@
-import { IdCard, LayoutDashboard, Menu, History, Cog,LogOut,BadgeCheck  } from "lucide-react";
+import { IdCard, LayoutDashboard, Menu, History, Cog,LogOut,BadgeCheck,HandCoins  } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import ThemeSwitcher from "./theme/ThemeSwitcher";
 import { useEffect, useState } from "react";
@@ -99,6 +99,12 @@ const Navbar = () => {
                 </Link>
               </li>
             </ul>
+            <button
+              className="btn bg-yellow-300 hover:bg-yellow-700 mb-2 font-montserrat font-bold"
+              onClick={() =>navigate("/add-funds")}
+            >
+              <HandCoins /> Add credits
+            </button>
             <button
               className="btn bg-green-500 hover:bg-green-600 text-black mb-2 font-montserrat font-bold"
               onClick={() => navigate("/validator")}

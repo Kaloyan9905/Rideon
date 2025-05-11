@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import passesService from "@/services/card-service";
 import profileService from "@/services/profile-service";
 import { CardVM } from "@/types/pass";
-import { Trash2, CalendarSync, X } from "lucide-react";
+import { X } from "lucide-react";
 import { motion } from "framer-motion";
 import { BASE_URL } from "@/services/base";
 
@@ -105,16 +105,6 @@ const CardTab: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleUpdateCard = async (expires_at: string) => {
-    await passesService.makeUpdateCardRequest(card!.pk, expires_at);
-    await fetchCard();
-  };
-
-  const handleDeleteCard = async () => {
-    await passesService.makeDeleteCardRequest(card!.pk);
-    setCard(null);
   };
 
   const formattedExpiration = new Date(computeExpiresAt()).toLocaleDateString();
@@ -224,71 +214,10 @@ const CardTab: React.FC = () => {
                       </h2>
                     </div>
                   </div>
-
-                  <div className="flex justify-end gap-3">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={async () => {
-                        await handleUpdateCard(
-                          new Date(Date.now()).toISOString()
-                        );
-                      }}
-                      className="p-3 bg-info/10 hover:bg-info/20 rounded-xl transition-colors"
-                      aria-label="Update card"
-                    >
-                      <CalendarSync className="w-5 h-5 sm:w-6 sm:h-6 text-info" />
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        (
-                          document.getElementById(
-                            "delete-card-modal"
-                          ) as HTMLDialogElement
-                        ).showModal();
-                      }}
-                      className="p-3 bg-error/10 hover:bg-error/20 rounded-xl transition-colors"
-                      aria-label="Delete card"
-                    >
-                      <Trash2 className="w-5 h-5 sm:w-6 sm:h-6 text-error" />
-                    </motion.button>
-                  </div>
                 </div>
               </div>
             </div>
           </motion.div>
-
-          <dialog
-            id="delete-card-modal"
-            className="modal modal-bottom sm:modal-middle"
-          >
-            <div className="modal-box bg-base-200 border border-base-content/10">
-              <p className="text-center text-lg sm:text-xl font-montserrat font-semibold text-base-content">
-                Are you sure you want to delete this card?
-              </p>
-              <div className="modal-action">
-                <form method="dialog" className="w-full flex flex-row gap-3">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="btn btn-error flex-[1.7] font-montserrat"
-                    onClick={handleDeleteCard}
-                  >
-                    Delete
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="btn btn-primary flex-[0.7] font-montserrat"
-                  >
-                    Close
-                  </motion.button>
-                </form>
-              </div>
-            </div>
-          </dialog>
 
           <QRCodeModal
             isOpen={showQRModal}

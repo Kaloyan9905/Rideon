@@ -14,6 +14,8 @@ import AuthGuard from "./components/AuthGuard";
 import PassesPage from "./pages/PassesPage";
 import ValidatorPage from "./pages/ValidatorPage";
 import HistoryPage from "./pages/HistoryPage";
+import AddFunds from "./pages/AddFunds";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 const App = createBrowserRouter(
   createRoutesFromElements(
@@ -40,6 +42,14 @@ const App = createBrowserRouter(
       <Route
         path="/validator"
         element={<AuthGuard element={<ValidatorPage />} requireAdmin={true} />}
+      />
+        <Route
+        path="/add-funds"
+        element={<AuthGuard element={<AddFunds />}/>}
+      />
+         <Route
+        path="/payment-success"
+        element={<AuthGuard element={<PaymentSuccess />}/>}
       />
       <Route
         path="*"
