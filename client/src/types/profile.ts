@@ -13,6 +13,7 @@ export interface ProfileVM {
   card?: CardVM | null;
   tickets: TicketVM[];
   balance?: number | null;
+  is_superuser?: boolean | null;
 }
 
 export interface ProfileUM {

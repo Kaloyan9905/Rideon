@@ -41,7 +41,7 @@ const App = createBrowserRouter(
       />
       <Route
         path="/validator"
-        element={<AuthGuard element={<ValidatorPage />} requireAdmin={true} />}
+        element={<AuthGuard element={<ValidatorPage />} requireAdmin />}
       />
         <Route
         path="/add-funds"
