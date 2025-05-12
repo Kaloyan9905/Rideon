@@ -19,7 +19,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ element, requireStaff = false, re
     const fetchProfile = async () => {
       try {
         const response = (await profileService.makeGetProfileRequest()) as AxiosResponse<ProfileVM>;
-        setIsSuperuser(response.data.is_superuser);
+        setIsSuperuser(response.data.is_superuser as boolean);
       } catch (error) {
         console.error("Failed to fetch profile:", error);
         setIsSuperuser(false);
@@ -39,6 +39,10 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ element, requireStaff = false, re
 
   if (requireAdmin && !isSuperuser) {
     return <ErrorPage statusCode={403} message="Admin access required." authError />;
+  }
+
+  if(requireStaff) {
+    console.log('here');
   }
 
   return <>{element}</>;
