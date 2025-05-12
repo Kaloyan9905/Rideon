@@ -93,7 +93,7 @@ const ValidatorBody = () => {
         setMessage("Waiting for QR code...");
         scanning.current = true;
         requestAnimationFrame(scanQRCode);
-      }, 1000);
+      }, 3000);
     } catch (err) {
       setStatus("invalid");
       setMessage("✘ Validation failed");
